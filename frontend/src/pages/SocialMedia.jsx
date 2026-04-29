@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 const SocialMedia = () => {
   return (
@@ -169,7 +169,7 @@ const SocialMedia = () => {
                   </div>
                   <p className="text-sm text-on-surface-variant mb-2">New follower on Instagram appears to be significantly older.</p>
                   <div className="flex items-center gap-3 p-2 bg-surface-container-low rounded border border-outline-variant/30 mb-3 w-max">
-                    <img alt="Profile pic" className="w-8 h-8 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADBDPrXoO7ZlzE6SqBdV9b2skp327i4P4E4AIfi5ba5R9aXmArFFvup3WFVOhO1UL8T8L0i4zzW8hlu1BYO-RD2AgtMmh-QbuflIft1AO7LtXRor-vgPxfsYvn1beLIrd2gSNjUYlB2t_9C13bkp7axzjwJ-yWJAcX7tGCQjHkDLq6ZjsPURNuqY1o9E0OfrN6SZ8tD2QsVwGyv04gy5FBBUC5n1wD8MIb4dFYLGAAKCV_MRxPuQLuNDGHeurZWFDePo_-8nBzDdSF"/>
+                    <img alt="Profile pic" className="w-8 h-8 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADBDPrXoO7ZlzE6SqBdV9b2skp327i4P4E4AIfi5ba5R9aXmArFFvup3WFVOhO1UL8T8L0i4zzW8hlu1BYO-RD2AgtMmh-QbuflIft1AO7LtXRor-vgPxfsYvn1beLIrd2gSNjUYlB2t_9C13bkp7axzjwJ-yWJAcX7tGCQjHkDLq6ZjsPURNuqY1o9E0OfrN6SZ8tD2QsVwGyv04gy5FBBUC5n1wD8MIb4dFYLGAAKCV_MRxPuQLuNDGHeurZWFDePo_-8nBzDdSF" />
                     <span className="font-label-sm text-label-sm text-on-background">@john_smith78</span>
                   </div>
                   <button className="text-primary font-label-sm text-label-sm hover:underline">View Profile Details</button>

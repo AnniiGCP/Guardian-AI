@@ -1,13 +1,13 @@
-import React from 'react';
+
 
 const Location = () => {
   return (
     <div className="relative w-full h-[calc(100vh-120px)] rounded-3xl overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.05)]">
       {/* Interactive Map Placeholder */}
       <div className="absolute inset-0 z-0 bg-surface-variant">
-        <img className="w-full h-full object-cover opacity-90" data-alt="High altitude clean aerial map view of a modern city grid and suburbs with subtle premium color grading and soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBP5C4ZzDymNlCP9kPMleMorm8r2b_iBhmxO3v4wHQZ8YpsY6tCyBEEfW5Tsa-T9rk5ODACqJayfNNYKfjcwFr7Cn3nG1QBzweley4GL3vWXrkLEQxWRpi_uVQfz-nJyXhQLKX-mNLmf85Swrgcl7xLVy4KDekVsTOpezhMfWhmMpoKIzMmPiFQGNpQBhEkjR9EGDCFfPfn7SLiwQP-9e38FyqM5D6l4lthSPprBcm-j2IJCtIfzZcURqktFXXP0mS2E69FlG3rT3Pc"/>
+        <img className="w-full h-full object-cover opacity-90" data-alt="High altitude clean aerial map view of a modern city grid and suburbs with subtle premium color grading and soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBP5C4ZzDymNlCP9kPMleMorm8r2b_iBhmxO3v4wHQZ8YpsY6tCyBEEfW5Tsa-T9rk5ODACqJayfNNYKfjcwFr7Cn3nG1QBzweley4GL3vWXrkLEQxWRpi_uVQfz-nJyXhQLKX-mNLmf85Swrgcl7xLVy4KDekVsTOpezhMfWhmMpoKIzMmPiFQGNpQBhEkjR9EGDCFfPfn7SLiwQP-9e38FyqM5D6l4lthSPprBcm-j2IJCtIfzZcURqktFXXP0mS2E69FlG3rT3Pc" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-transparent to-black/20 pointer-events-none"></div>
-        
+
         {/* Simulated User Map Marker */}
         <div className="absolute top-[45%] left-[55%] transform -translate-x-1/2 -translate-y-1/2 z-10 flex flex-col items-center pointer-events-none">
           <div className="bg-primary text-on-primary font-label-sm text-label-sm px-3 py-1.5 rounded-full shadow-lg mb-2 backdrop-blur-md bg-opacity-90 border border-white/20">
@@ -18,7 +18,7 @@ const Location = () => {
             <div className="absolute inset-0 rounded-full bg-primary opacity-20 scale-150"></div>
             <div className="absolute inset-0 rounded-full bg-primary opacity-40 scale-110"></div>
             <div className="relative w-full h-full bg-white rounded-full p-1 shadow-xl border-2 border-primary">
-              <img className="w-full h-full rounded-full object-cover" data-alt="Portrait of a young teenage girl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYfO0rXac708GrAtiWhCQVnscoTO03qH-slDq1bqeq89emT45_EQRbosilbCvloXVWsnD5BVkm87a7HLwhbWUMpZvIMD74VKDrdegwZaahyDDG6F7Vv21DRt2iGDv0Q_QiJquoHvSfORRo2FVTH0mz9t2y8XTCqJeg-Hu6IAl5U-OfnMYDI9dFWE0-5Q1NsqLC7xIejh4MuRN_jxF7FjyE82d1NRQrzszk62uIh8JS1RFvGDMHLqmY-5zFwvsVJHjseJEU8HXVZfmO"/>
+              <img className="w-full h-full rounded-full object-cover" data-alt="Portrait of a young teenage girl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYfO0rXac708GrAtiWhCQVnscoTO03qH-slDq1bqeq89emT45_EQRbosilbCvloXVWsnD5BVkm87a7HLwhbWUMpZvIMD74VKDrdegwZaahyDDG6F7Vv21DRt2iGDv0Q_QiJquoHvSfORRo2FVTH0mz9t2y8XTCqJeg-Hu6IAl5U-OfnMYDI9dFWE0-5Q1NsqLC7xIejh4MuRN_jxF7FjyE82d1NRQrzszk62uIh8JS1RFvGDMHLqmY-5zFwvsVJHjseJEU8HXVZfmO" />
             </div>
           </div>
         </div>
@@ -50,7 +50,7 @@ const Location = () => {
                 <span className="font-label-sm text-label-sm text-outline mt-1">82%</span>
               </div>
             </div>
-            
+
             <div className="space-y-4">
               <div className="flex items-start gap-3">
                 <div className="mt-0.5 w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-primary">
@@ -62,7 +62,7 @@ const Location = () => {
                   <p className="font-label-sm text-label-sm text-outline mt-0.5">Updated just now</p>
                 </div>
               </div>
-              
+
               <div className="flex items-start gap-3">
                 <div className="mt-0.5 w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-secondary">
                   <span className="material-symbols-outlined text-[18px]">directions_walk</span>
@@ -74,7 +74,7 @@ const Location = () => {
               </div>
             </div>
           </div>
-          
+
           {/* Map Tools */}
           <div className="glass-card rounded-full p-2 flex flex-col gap-2 pointer-events-auto">
             <button className="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface/50 hover:text-primary transition-colors">
@@ -102,7 +102,7 @@ const Location = () => {
               </h3>
               <button className="text-primary font-label-md text-label-md hover:underline">Edit</button>
             </div>
-            
+
             <div className="space-y-3">
               <div className="bg-surface-container-lowest/60 rounded-lg p-3 border border-outline-variant/20 flex items-center justify-between group hover:border-primary/30 transition-colors">
                 <div className="flex items-center gap-3">
@@ -134,7 +134,7 @@ const Location = () => {
                 </div>
               </div>
             </div>
-            
+
             <button className="w-full mt-4 py-2.5 border border-outline-variant/50 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container/50 hover:text-on-surface transition-colors flex items-center justify-center gap-2">
               <span className="material-symbols-outlined text-[18px]">add_circle</span>
               Create New Zone
@@ -149,21 +149,21 @@ const Location = () => {
                 <span className="material-symbols-outlined text-secondary">schedule</span>
                 Today's Path
               </h3>
-              
+
               <div className="relative border-l-2 border-surface-variant ml-4 space-y-6">
                 <div className="relative pl-6">
                   <div className="absolute w-3 h-3 bg-surface-container border-2 border-primary rounded-full -left-[7.5px] top-1"></div>
                   <p className="font-label-sm text-label-sm text-outline mb-0.5">3:15 PM</p>
                   <p className="font-body-md text-body-md text-on-surface font-medium">Left Lincoln High</p>
                 </div>
-                
+
                 <div className="relative pl-6">
                   <div className="absolute w-3 h-3 bg-surface-container border-2 border-outline-variant rounded-full -left-[7.5px] top-1"></div>
                   <p className="font-label-sm text-label-sm text-outline mb-0.5">1:00 PM</p>
                   <p className="font-body-md text-body-md text-on-surface font-medium">Arrived at Campus Cafe</p>
                   <p className="font-label-sm text-label-sm text-on-surface-variant mt-1">Stayed for 45 mins</p>
                 </div>
-                
+
                 <div className="relative pl-6 pb-2">
                   <div className="absolute w-3 h-3 bg-surface-container border-2 border-outline-variant rounded-full -left-[7.5px] top-1"></div>
                   <p className="font-label-sm text-label-sm text-outline mb-0.5">8:10 AM</p>

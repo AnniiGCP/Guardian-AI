@@ -1,0 +1,201 @@
+# Guardian-AI — Frontend vs API Contract Verification Report
+
+> **Verdict: ❌ The frontend is NOT backend-ready.**
+> The API layer is well-structured, but 3 pages are static mockups, the Upload page is a placeholder, and several contract violations exist in field handling and enums.
+
+---
+
+## 1. API Layer (`src/services/api.js`) — Endpoint Alignment
+
+| Contract Endpoint | Frontend Function | Match | Notes |
+|---|---|---|---|
+| `POST /ingest` | `ingestJson(body)` | ✅ | Correct method, path, JSON body |
+| `POST /ingest/audio` | `ingestAudio(formData)` | ✅ | Correct multipart/form-data handling |
+| `GET /session/{session_id}` | `getSession(sessionId)` | ✅ | Correct path interpolation |
+| `GET /sessions` | `getSessions()` | ✅ | Correct path |
+| `WS /ws/alerts` | Dashboard.jsx WebSocket | ✅ | Correct URL construction |
+
+> [!TIP]
+> The API abstraction layer is solid. All 5 contract endpoints are wired up correctly with proper HTTP methods.
+
+---
+
+## 2. Issues Found — Prioritized
+
+### 🔴 CRITICAL Issues
+
+#### C1. Upload Page is a Placeholder
+- **File**: [Upload.jsx](file:///a:/Guardian-AI/frontend/src/pages/Upload.jsx)
+- **Problem**: The page is an empty stub — `"Upload UI not implemented here"`. There is **no way** for users to submit chat messages (`POST /ingest`) or audio files (`POST /ingest/audio`) through the UI.
+- **Impact**: The core user flow (submit data → get analysis) is broken.
+- **Fix**: Build the Upload page with:
+  - A JSON message form calling `api.ingestJson({ platform, messages })`
+  - An audio file uploader calling `api.ingestAudio(formData)` with field name `file`
+  - Handle the `{ session_id, status }` response to navigate to the dashboard
+
+#### C2. `ingestAudio` Response Missing `transcript` Field
+- **File**: [api.js:97-104](file:///a:/Guardian-AI/frontend/src/services/api.js#L97-L104)
+- **Contract**: `POST /ingest/audio` returns `{ session_id, transcript, status }`
+- **Problem**: The frontend ignores the `transcript` field entirely. Mock mode doesn't return it either.
+- **Fix (frontend)**: Capture and return `transcript` from the response. Display it in the Upload flow.
+- **Fix (mock)**: Add `transcript: "mock transcription text"` to the mock return.
+
+#### C3. SessionHistory Hardcoded Fallback Data Violates Contract
+- **File**: [SessionHistory.jsx:31-36](file:///a:/Guardian-AI/frontend/src/pages/SessionHistory.jsx#L31-L36)
+- **Problem**: While the API loads, hardcoded sessions are shown with:
+  - Non-UUID IDs: `#SW-8892-A` (contract requires UUID)
+  - Non-ISO timestamps: `Oct 24, 2023 • 14:32` (contract requires ISO 8601)
+  - Missing `recommendation` field (contract includes it in `/sessions`)
+- **Fix**: Replace with a loading spinner, or use contract-compliant placeholder data.
+
+#### C4. Location & SocialMedia Pages Are Fully Static
+- **Files**: [Location.jsx](file:///a:/Guardian-AI/frontend/src/pages/Location.jsx), [SocialMedia.jsx](file:///a:/Guardian-AI/frontend/src/pages/SocialMedia.jsx)
+- **Problem**: Both pages are 100% hardcoded HTML mockups with zero API integration. All data (map, usernames, stats, flagged interactions, risk categories) is static.
+- **Note**: The API contract doesn't define endpoints for these features, so they can't be integrated *yet*. But they will break users' expectations if shipped as-is.
+- **Fix**: Either (a) add "Coming Soon" labels, or (b) define new contract endpoints and integrate.
+
+---
+
+### 🟡 MODERATE Issues
+
+#### M1. `normalizeSession` Violates Contract Principles
+- **File**: [api.js:6-23](file:///a:/Guardian-AI/frontend/src/services/api.js#L6-L23)
+- **Contract Rule**: *"Frontend MUST treat contract as final (no assumptions)"*
+- **Problem**: The normalizer accepts **camelCase alternatives** (`sessionId`, `riskScore`, `groomingStage`, `stageProgression`, `confidenceScore`) and **DB column names** (`raw_flag_json`, `created_at`, `drift_json`, `stage_progression_json`). This means:
+  - Backend bugs (wrong field names) would be silently masked
+  - The frontend is doing the backend's mapping job
+- **Fix**: Strip all fallback aliases. Trust the contract:
+
+```diff
+- session_id: raw.session_id || raw.id || raw.sessionId || ...
++ session_id: raw.session_id,
+- risk_score: raw.risk_score != null ? raw.risk_score : raw.riskScore != null ? ...
++ risk_score: raw.risk_score ?? 0,
+```
+
+#### M2. Invalid Recommendation Enum: `'escalate'`
+- **File**: [Dashboard.jsx:23](file:///a:/Guardian-AI/frontend/src/pages/Dashboard.jsx#L23)
+- **Contract enums**: `monitor`, `alert_parent`, `escalate_platform`
+- **Problem**: `case 'escalate':` is handled but **not a valid contract enum**.
+- **Fix**: Remove the `case 'escalate':` line. Keep only `case 'escalate_platform':`.
+
+#### M3. `grooming_stage` Default is `'none'` — Not a Valid Enum
+- **File**: [api.js:16](file:///a:/Guardian-AI/frontend/src/services/api.js#L16)
+- **Contract enums**: `trust_building`, `isolation`, `secrecy`, `escalation`
+- **Problem**: Defaults to `'none'` which is not in the contract.
+- **Fix**: Default to `'trust_building'` (first stage) or handle `null` gracefully in the UI.
+
+#### M4. `/sessions` Response Over-Normalized
+- **File**: [api.js:77-79](file:///a:/Guardian-AI/frontend/src/services/api.js#L77-L79)
+- **Contract**: `/sessions` returns `[{ session_id, risk_score, timestamp, recommendation }]` — a **lightweight** array.
+- **Problem**: `arr.map(normalizeSession)` treats these as full session objects, filling in defaults for `confidence: 0`, `grooming_stage: 'none'`, `flags: []`, etc. The extra fallback `res.sessions || []` implies a `{ sessions: [] }` wrapper that doesn't exist in the contract.
+- **Fix**: Create a separate `normalizeSessionSummary()` for lightweight objects.
+
+#### M5. SessionHistory Missing `recommendation` Display
+- **File**: [SessionHistory.jsx:54-74](file:///a:/Guardian-AI/frontend/src/pages/SessionHistory.jsx#L54-L74)
+- **Contract**: `/sessions` response includes `recommendation` per item.
+- **Problem**: The table doesn't show the recommendation column.
+- **Fix**: Add a column displaying the `recommendation` value with appropriate styling.
+
+#### M6. Error Responses Not Parsed Per Contract
+- **File**: [api.js:40-45](file:///a:/Guardian-AI/frontend/src/services/api.js#L40-L45)
+- **Contract**: Errors return `{ "error": "message" }` for 400, 404, 500.
+- **Problem**: The error handler reads `res.text()` as a raw string, doesn't parse `{ error }` JSON.
+- **Fix**: Parse error body as JSON and use the `error` field:
+
+```js
+const json = await res.json().catch(() => null)
+const message = json?.error || res.statusText
+```
+
+---
+
+### 🟢 MINOR Issues
+
+| ID | File | Issue | Fix |
+|---|---|---|---|
+| m1 | Dashboard.jsx:118-128 | Fallback session object missing `platform` and `categories` | Add them to the default |
+| m2 | SessionHistory.jsx:55 | `s.id` fallback — not a contract field | Remove `s.id` fallback |
+| m3 | SessionHistory.jsx:57 | `s.score` fallback — not a contract field | Remove, use only `s.risk_score` |
+| m4 | SessionHistory.jsx:71 | "View Full Chat" button has no `onClick` | Wire to `/dashboard/${id}` |
+| m5 | Dashboard.jsx | `s.platform` fetched but never displayed | Display platform if relevant |
+| m6 | Dashboard.jsx | `s.categories` fetched but never displayed | Consider showing categories |
+| m7 | SocialMedia.jsx:189-213 | Risk categories use "Cyberbullying", "Explicit Content" — not contract flag types | Align with contract flag types when API is integrated |
+| m8 | `.env.example` | Empty file — no documented env vars | Add `VITE_API_BASE_URL`, `VITE_USE_MOCK`, `VITE_WS_URL` |
+
+---
+
+## 3. Mock Data Compliance
+
+**`src/mock/demoSession.json`** — ✅ **Fully contract-compliant**
+
+| Contract Field | Present | Correct Type | Valid Enum |
+|---|---|---|---|
+| `session_id` | ✅ | ✅ string | — |
+| `platform` | ✅ | ✅ string | — |
+| `timestamp` | ✅ | ✅ ISO 8601 | — |
+| `risk_score` | ✅ | ✅ integer | — |
+| `confidence` | ✅ | ✅ float | — |
+| `grooming_stage` | ✅ | ✅ string | ✅ `isolation` |
+| `flags[].type` | ✅ | ✅ string | ✅ `isolation_tactic`, `gift_offering`, `trust_building` |
+| `flags[].snippet` | ✅ | ✅ string | — |
+| `flags[].severity` | ✅ | ✅ string | — |
+| `flags[].message_index` | ✅ | ✅ integer | — |
+| `categories` | ✅ | ✅ array | — |
+| `stage_progression` | ✅ | ✅ object (4 booleans) | — |
+| `recommendation` | ✅ | ✅ string | ✅ `alert_parent` |
+| `drift_signals` | ✅ | ✅ object (3 booleans) | — |
+
+---
+
+## 4. Architecture Evaluation
+
+| Criteria | Status | Details |
+|---|---|---|
+| API abstraction layer exists? | ✅ | `src/services/api.js` — centralized |
+| All API calls go through it? | ✅ | Dashboard + SessionHistory use `api.*` |
+| Env-based config? | ✅ | `VITE_API_BASE_URL`, `VITE_USE_MOCK` |
+| Mock/live toggle? | ✅ | Single env var switches mode |
+| Mock data is contract-shaped? | ✅ | `demoSession.json` matches contract |
+| Can switch mock→real without refactoring? | ⚠️ | Yes for Dashboard/History. Upload page needs to be built first. |
+| Error handling follows contract? | ❌ | Doesn't parse `{ error }` JSON format |
+| WebSocket integrated? | ✅ | Dashboard connects to `/ws/alerts` |
+| All contract fields consumed in UI? | ⚠️ | `platform`, `categories` unused. `transcript` ignored. |
+
+---
+
+## 5. Backend Gaps (for reference)
+
+These are backend issues found while auditing:
+
+| Issue | File | Details |
+|---|---|---|
+| `GET /session/{id}` is a stub | [session.py](file:///a:/Guardian-AI/backend/app/api/session.py) | Returns `{ status: "stub" }`, not the contract schema |
+| `GET /sessions` endpoint missing | Backend | Not implemented at all |
+| `WS /ws/alerts` endpoint missing | Backend | Not implemented at all |
+| `/ingest/audio` doesn't return `transcript` | [ingest.py](file:///a:/Guardian-AI/backend/app/api/ingest.py) | Response only has `session_id` + `status` |
+| DB model missing `categories` column | [models/session.py](file:///a:/Guardian-AI/backend/app/models/session.py) | Contract requires `categories` array |
+| No CORS middleware | Backend | Frontend will get blocked on cross-origin requests |
+
+---
+
+## 6. Final Conclusion
+
+### Is the frontend backend-ready? **❌ No**
+
+### Remaining steps to achieve full integration readiness:
+
+| # | Priority | Task | Effort |
+|---|---|---|---|
+| 1 | 🔴 | **Build the Upload page** with JSON + audio forms | High |
+| 2 | 🔴 | **Handle `transcript`** from audio ingest response | Low |
+| 3 | 🔴 | **Remove hardcoded fallback data** in SessionHistory | Low |
+| 4 | 🟡 | **Strip `normalizeSession` aliases** — trust the contract | Medium |
+| 5 | 🟡 | **Fix enum violations** (`'escalate'` → remove, `'none'` → handle null) | Low |
+| 6 | 🟡 | **Parse error responses** as `{ error }` JSON | Low |
+| 7 | 🟡 | **Add `recommendation` column** to SessionHistory table | Low |
+| 8 | 🟡 | **Create `normalizeSessionSummary()`** for `/sessions` lightweight data | Low |
+| 9 | 🟢 | Wire "View Full Chat" button to navigation | Low |
+| 10 | 🟢 | Document env vars in `.env.example` | Low |
+| 11 | 🟢 | Display `platform` and `categories` in Dashboard | Low |
+| 12 | ⬜ | Decide on Location/SocialMedia page strategy (static vs API) | Planning |

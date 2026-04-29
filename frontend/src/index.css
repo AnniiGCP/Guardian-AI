@@ -1,11 +1,25 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+
+@custom-variant dark (&:is(.dark *));
 @config "../tailwind.config.js";
 
 @layer base {
   body {
-    background: linear-gradient(to bottom right, #FAFAFA, #F3F4FF);
     min-height: 100vh;
     overflow-x: hidden;
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-sans;
   }
 }
 
@@ -25,7 +39,7 @@
     transform: translateY(-2px);
     transition: all 0.3s ease;
   }
-  
+
   .ambient-shadow {
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
   }
@@ -54,7 +68,7 @@
     bottom: -150px;
     right: -100px;
   }
-  
+
   .blob-3 {
     width: 300px;
     height: 300px;
@@ -68,7 +82,7 @@
   }
 
   .alert-pulse {
-     animation: alertPulse 3s infinite;
+    animation: alertPulse 3s infinite;
   }
 }
 
@@ -76,16 +90,164 @@
   0% {
     box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
   }
+
   70% {
     box-shadow: 0 0 0 6px rgba(34, 197, 94, 0);
   }
+
   100% {
     box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
   }
 }
 
 @keyframes alertPulse {
-  0% { background-color: rgba(255, 218, 214, 0.2); }
-  50% { background-color: rgba(255, 218, 214, 0.5); }
-  100% { background-color: rgba(255, 218, 214, 0.2); }
+  0% {
+    background-color: rgba(255, 218, 214, 0.2);
+  }
+
+  50% {
+    background-color: rgba(255, 218, 214, 0.5);
+  }
+
+  100% {
+    background-color: rgba(255, 218, 214, 0.2);
+  }
+}
+
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans: 'Geist Variable', sans-serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  /* Alice.io light palette (H S% L%) - variables hold H S% L% for hsl(var(--...)) usage */
+  --background: 30 35% 93%;
+  /* #F5EDE3 cream */
+  --foreground: 0 0% 5%;
+  /* near-black */
+  --card: 30 35% 96%;
+  --card-foreground: 0 0% 5%;
+  --popover: 30 35% 96%;
+  --popover-foreground: 0 0% 5%;
+  --primary: 181 84% 26%;
+  /* teal */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 24 15% 15%;
+  /* dark bar */
+  --secondary-foreground: 30 35% 93%;
+  --muted: 33 30% 87%;
+  --muted-foreground: 24 10% 30%;
+  --accent: 333 70% 47%;
+  /* magenta */
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 75% 40%;
+  --border: 33 25% 80%;
+  --input: 33 25% 80%;
+  --ring: 181 84% 26%;
+  --chart-1: 30 40% 85%;
+  --chart-2: 200 60% 80%;
+  --chart-3: 343 60% 78%;
+  --chart-4: 38 85% 68%;
+  --chart-5: 199 60% 80%;
+  --radius: 0.625rem;
+  --sidebar: 30 35% 96%;
+  --sidebar-foreground: 0 0% 5%;
+  --sidebar-primary: 181 84% 26%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 333 70% 47%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-border: 33 25% 80%;
+  --sidebar-ring: 181 84% 26%;
+
+  /* Brand extras */
+  --brand-pink: 343 60% 78%;
+  --brand-sky: 199 60% 80%;
+  --brand-yellow: 38 85% 68%;
+}
+
+.dark {
+  /* Dark-mode counterparts */
+  --background: 0 0% 6%;
+  /* near-black */
+  --foreground: 0 0% 96%;
+  /* light text */
+  --card: 0 0% 10%;
+  --card-foreground: 0 0% 96%;
+  --popover: 0 0% 10%;
+  --popover-foreground: 0 0% 96%;
+  --primary: 181 84% 26%;
+  /* keep teal */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 24 15% 14%;
+  --secondary-foreground: 0 0% 96%;
+  --muted: 33 20% 14%;
+  --muted-foreground: 0 0% 72%;
+  --accent: 333 70% 47%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 75% 40%;
+  --border: 0 0% 14%;
+  --input: 0 0% 12%;
+  --ring: 181 84% 26%;
+  --chart-1: 30 30% 18%;
+  --chart-2: 200 50% 12%;
+  --chart-3: 343 60% 38%;
+  --chart-4: 38 85% 28%;
+  --chart-5: 199 60% 32%;
+  --sidebar: 0 0% 10%;
+  --sidebar-foreground: 0 0% 96%;
+  --sidebar-primary: 181 84% 26%;
+  --sidebar-primary-foreground: 0 0% 96%;
+  --sidebar-accent: 333 70% 47%;
+  --sidebar-accent-foreground: 0 0% 96%;
+  --sidebar-border: 0 0% 14%;
+  --sidebar-ring: 181 84% 26%;
+
+  /* Brand extras (same values) */
+  --brand-pink: 343 60% 78%;
+  --brand-sky: 199 60% 80%;
+  --brand-yellow: 38 85% 68%;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }

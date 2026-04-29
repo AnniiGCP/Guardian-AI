@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 const Support = () => {
   return (
@@ -9,7 +9,7 @@ const Support = () => {
         <p className="font-body-lg text-body-lg text-on-surface-variant mb-8">Search our knowledge base or browse categories below for quick answers.</p>
         <div className="relative w-full max-w-2xl mx-auto shadow-[0_20px_40px_rgba(0,0,0,0.05)] rounded-full">
           <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
-          <input className="w-full bg-white/80 backdrop-blur-md border border-white/40 rounded-full py-4 pl-12 pr-6 font-body-lg text-on-surface shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] focus:outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all placeholder:text-outline-variant" placeholder="Search for 'location tracking' or 'privacy'" type="text"/>
+          <input className="w-full bg-white/80 backdrop-blur-md border border-white/40 rounded-full py-4 pl-12 pr-6 font-body-lg text-on-surface shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] focus:outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all placeholder:text-outline-variant" placeholder="Search for 'location tracking' or 'privacy'" type="text" />
         </div>
       </div>
 

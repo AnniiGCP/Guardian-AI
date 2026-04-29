@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import api from '../services/api'
+import api, { getWsAlertsUrl } from '../services/api'
 
 const STAGES = [
   { key: 'trust_building', label: 'Trust building' },
@@ -40,39 +40,13 @@ const Dashboard = () => {
   const [sessions, setSessions] = useState([])
   const [session, setSession] = useState(null)
   const [loadingSessions, setLoadingSessions] = useState(false)
-  const [loadingSession, setLoadingSession] = useState(false)
+  const [, setLoadingSession] = useState(false)
   const [error, setError] = useState(null)
   const wsRef = useRef(null)
 
-  const WS_URL = import.meta.env.VITE_WS_URL || ((import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/^http/, 'ws') + '/ws/alerts')
+  const WS_URL = getWsAlertsUrl()
 
-  useEffect(() => { loadSessions() }, [])
-
-  useEffect(() => {
-    if (routeSessionId) fetchSession(routeSessionId)
-    else if (sessions.length > 0 && !session) setSession(sessions[0])
-  }, [routeSessionId, sessions])
-
-  useEffect(() => {
-    let ws
-    try {
-      ws = new WebSocket(WS_URL)
-      wsRef.current = ws
-      ws.onmessage = (ev) => {
-        try {
-          const msg = JSON.parse(ev.data)
-          if (msg && msg.event === 'analysis_complete' && msg.session_id) {
-            fetchSession(msg.session_id)
-          }
-        } catch (e) { }
-      }
-    } catch (e) {
-      // WebSocket might not be available in some dev environments
-    }
-    return () => { if (wsRef.current) { wsRef.current.close(); wsRef.current = null } }
-  }, [WS_URL])
-
-  async function loadSessions() {
+  const loadSessions = useCallback(async () => {
     setLoadingSessions(true)
     try {
       const list = await api.getSessions()
@@ -80,11 +54,12 @@ const Dashboard = () => {
       setSessions(list)
       setLoadingSessions(false)
       if (!routeSessionId && list.length > 0) setSession(list[0])
-    } catch (e) {
+    } catch (err) {
+      console.error(err)
       setError('Failed to load sessions')
       setLoadingSessions(false)
     }
-  }
+  }, [routeSessionId])
 
   async function fetchSession(id) {
     setLoadingSession(true)
@@ -99,10 +74,46 @@ const Dashboard = () => {
           return updated
         })
       }
-    } catch (e) {
+    } catch (err) {
+      console.error(err)
       setError('Failed to load session')
     } finally { setLoadingSession(false) }
   }
+
+  useEffect(() => {
+    const t = setTimeout(() => { loadSessions() }, 0)
+    return () => clearTimeout(t)
+  }, [loadSessions])
+
+  useEffect(() => {
+    if (routeSessionId) {
+      const tt = setTimeout(() => fetchSession(routeSessionId), 0)
+      return () => clearTimeout(tt)
+    }
+    if (sessions.length > 0 && !session) {
+      const t = setTimeout(() => setSession(sessions[0]), 0)
+      return () => clearTimeout(t)
+    }
+  }, [routeSessionId, sessions, session])
+
+  useEffect(() => {
+    let ws
+    try {
+      ws = new WebSocket(WS_URL)
+      wsRef.current = ws
+      ws.onmessage = (ev) => {
+        try {
+          const msg = JSON.parse(ev.data)
+          if (msg && msg.event === 'analysis_complete' && msg.session_id) {
+            fetchSession(msg.session_id)
+          }
+        } catch (err) { console.debug(err) }
+      }
+    } catch (err) {
+      console.debug('WebSocket unavailable', err)
+    }
+    return () => { if (wsRef.current) { wsRef.current.close(); wsRef.current = null } }
+  }, [WS_URL])
 
   const s = session || {
     session_id: 'demo-session-1',
@@ -120,7 +131,14 @@ const Dashboard = () => {
     <div>
       <div className="mb-6">
         <h1 className="font-display-sm text-display-sm text-on-surface mb-2">Overview</h1>
-        <p className="font-body-lg text-body-lg text-on-surface-variant">Latest analysis for session {s.session_id}</p>
+        <p className="font-body-lg text-body-lg text-on-surface-variant flex items-center gap-2 flex-wrap">
+          Latest analysis for session <span className="font-mono text-sm">{s.session_id}</span>
+          {s.platform && (
+            <span className="px-2 py-0.5 rounded-md bg-surface-container text-on-surface-variant font-label-sm text-label-sm capitalize border border-outline-variant/20">
+              {s.platform.replace(/_/g, ' ')}
+            </span>
+          )}
+        </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
@@ -128,7 +146,7 @@ const Dashboard = () => {
         <aside className="md:col-span-3">
           <div className="glass-card rounded-2xl p-4 h-full">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-headline-sm">Past sessions</h3>
+              <h3 className="font-headline-sm m-0">Past sessions</h3>
               <button className="text-sm text-primary" onClick={loadSessions}>Refresh</button>
             </div>
             {loadingSessions ? (
@@ -161,12 +179,12 @@ const Dashboard = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Risk Score + Stage */}
-            <div className="lg:col-span-4 glass-card rounded-2xl p-6 flex flex-col items-center">
+            <div className="lg:col-span-6 glass-card rounded-2xl p-6 flex flex-col items-center min-h-0">
               <div className="w-full flex items-center justify-between mb-4">
                 <div className="text-sm text-on-surface-variant uppercase tracking-widest">Risk Score</div>
                 <div className="text-sm text-on-surface-variant">Confidence: {Math.round((s.confidence || 0) * 100)}%</div>
               </div>
-              <div className={`w-40 h-40 rounded-full flex items-center justify-center border-2 ${getRiskBadge(s.risk_score).className}`}>
+              <div className={`w-32 sm:w-40 h-32 sm:h-40 rounded-full flex items-center justify-center border-2 max-w-full ${getRiskBadge(s.risk_score).className}`}>
                 <div className="text-center">
                   <div className="font-display-xl text-4xl">{s.risk_score}</div>
                   <div className="text-sm mt-1">/ 100</div>
@@ -182,7 +200,7 @@ const Dashboard = () => {
                     const active = s.grooming_stage === st.key
                     const base = done ? 'bg-purple-600 text-white' : active ? 'bg-purple-200 text-purple-900 ring-2 ring-purple-600' : 'bg-gray-100 text-gray-400'
                     return (
-                      <div key={st.key} className={`${base} px-3 py-1 rounded-full text-sm`}>{st.label}</div>
+                      <div key={st.key} className={`${base} px-3 py-1 rounded-md text-sm font-semibold tracking-wide`}>{st.label}</div>
                     )
                   })}
                 </div>
@@ -190,14 +208,14 @@ const Dashboard = () => {
             </div>
 
             {/* Center: Flagged snippets & details */}
-            <div className="lg:col-span-5 glass-card rounded-2xl p-6 flex flex-col">
+            <div className="lg:col-span-6 glass-card rounded-2xl p-6 flex flex-col min-h-0">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-headline-md">Flagged snippets</h3>
                 <div className="text-sm text-on-surface-variant">{s.flags ? s.flags.length : 0} flags</div>
               </div>
-              <div className="flex flex-col gap-3 overflow-y-auto max-h-[340px] pr-2">
+              <div className="flex flex-col gap-3 overflow-y-auto max-h-[340px] pr-2 min-h-0">
                 {s.flags && s.flags.length > 0 ? s.flags.map((f, idx) => (
-                  <div key={idx} className="p-3 rounded-xl border border-outline-variant/30 bg-surface/50">
+                  <div key={idx} className="p-3 rounded-xl border border-outline-variant/30 bg-surface/50 overflow-hidden">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-3">
                         <span className={`${severityBadge(f.severity)} px-2 py-0.5 rounded-md text-xs font-medium`}>{f.type.replace(/_/g, ' ')}</span>
@@ -205,7 +223,7 @@ const Dashboard = () => {
                       </div>
                       <div className="text-xs text-on-surface-variant uppercase">{(f.severity || '').toUpperCase()}</div>
                     </div>
-                    <div className="font-body-md text-body-md text-on-surface">"{f.snippet}"</div>
+                    <div className="font-body-md text-body-md text-on-surface break-words whitespace-pre-wrap max-w-full">"{f.snippet}"</div>
                   </div>
                 )) : (
                   <div className="text-sm text-on-surface-variant">No flagged snippets</div>
@@ -213,8 +231,8 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* Right: Drift signals */}
-            <div className="lg:col-span-3 glass-card rounded-2xl p-6 flex flex-col">
+            {/* Right: Drift signals (moved below, full width) */}
+            <div className="lg:col-span-12 glass-card rounded-2xl p-6 flex flex-col">
               <h3 className="font-headline-md mb-4">Drift signals</h3>
               <div className="flex flex-col gap-3">
                 {[
