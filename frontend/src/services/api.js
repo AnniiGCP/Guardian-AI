@@ -108,7 +108,7 @@ export async function getSessions(limit = 50, offset = 0) {
         }).filter(Boolean)
         if (sessions.length === 0) sessions = [normalizeSession(demoSession)]
         sessions.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-        return sessions
+        return sessions.slice(offset, offset + limit)
     }
 
     const res = await apiFetch(`/sessions?limit=${limit}&offset=${offset}`)

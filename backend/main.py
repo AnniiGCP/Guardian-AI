@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from sqlalchemy.exc import OperationalError
 
 from app.api.alerts import router as alerts_router
 from app.api.ingest import router as ingest_router
@@ -35,6 +36,10 @@ async def http_exception_handler(_: Request, exc: HTTPException):
 @app.exception_handler(Exception)
 async def unhandled_exception_handler(_: Request, __: Exception):
     return JSONResponse(status_code=500, content={"error": "internal server error"})
+
+@app.exception_handler(OperationalError)
+async def db_connection_exception_handler(_: Request, __: OperationalError):
+    return JSONResponse(status_code=503, content={"error": "database unavailable"})
 
 
 @app.on_event("startup")

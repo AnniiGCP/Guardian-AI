@@ -3,15 +3,15 @@ import { useNavigate } from 'react-router-dom'
 import api from '../services/api'
 
 const riskStyles = {
-  high: { badge: 'bg-error-container text-on-error-container border-error/10', dot: 'bg-error animate-pulse' },
-  medium: { badge: 'bg-tertiary-container text-on-tertiary-container border-tertiary/10', dot: 'bg-tertiary' },
-  low: { badge: 'bg-secondary-container text-on-secondary-container border-secondary/10', dot: 'bg-secondary' },
+  high: { badge: 'bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20', dot: 'bg-red-500 animate-pulse' },
+  medium: { badge: 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20', dot: 'bg-amber-500' },
+  low: { badge: 'bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20', dot: 'bg-green-500' },
 }
 
 const recStyles = {
-  escalate_platform: { text: 'Escalate', className: 'bg-red-100 text-red-800' },
-  alert_parent: { text: 'Alert Parent', className: 'bg-amber-100 text-amber-800' },
-  monitor: { text: 'Monitor', className: 'bg-blue-100 text-blue-800' },
+  escalate_platform: { text: 'Escalate', className: 'bg-red-500/10 text-red-700 dark:text-red-400' },
+  alert_parent: { text: 'Alert Parent', className: 'bg-amber-500/10 text-amber-700 dark:text-amber-400' },
+  monitor: { text: 'Monitor', className: 'bg-blue-500/10 text-blue-700 dark:text-blue-400' },
 }
 
 function scoreToRisk(score) {
@@ -20,7 +20,7 @@ function scoreToRisk(score) {
   return 'low'
 }
 
-const PAGE_SIZE = 10
+const PAGE_SIZE = 6
 
 const SessionHistory = () => {
   const navigate = useNavigate()
@@ -55,28 +55,28 @@ const SessionHistory = () => {
   const display = sessions || []
 
   return (
-    <div className="max-w-[1200px] mx-auto space-y-8">
-      <div>
-        <h2 className="font-display-sm text-display-sm text-on-surface">Session History</h2>
-        <p className="font-body-md text-body-md text-on-surface-variant mt-2">Review historical monitoring sessions and associated risk assessments.</p>
+    <div className="max-w-[1200px] mx-auto -mt-8">
+      <div className="mb-2">
+        <h2 className="font-display-sm text-display-sm text-foreground">Session History</h2>
+        {/* <p className="font-body-md text-body-md text-muted-foreground mt-2">Review historical monitoring sessions and associated risk assessments.</p> */}
       </div>
 
       <div className="glass-card rounded-[24px] overflow-hidden">
         {/* Table header */}
-        <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-outline-variant/30 bg-surface-container-low/50">
-          <div className="col-span-3 font-label-md text-label-md text-on-surface-variant">Session ID</div>
-          <div className="col-span-2 font-label-md text-label-md text-on-surface-variant">Platform</div>
-          <div className="col-span-2 font-label-md text-label-md text-on-surface-variant">Timestamp</div>
-          <div className="col-span-2 font-label-md text-label-md text-on-surface-variant">Risk Assessment</div>
-          <div className="col-span-1 font-label-md text-label-md text-on-surface-variant">Recommendation</div>
-          <div className="col-span-2 font-label-md text-label-md text-on-surface-variant text-right">Action</div>
+        <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-border/50 bg-muted/50">
+          <div className="col-span-3 font-label-md text-label-md text-muted-foreground">Session ID</div>
+          <div className="col-span-2 font-label-md text-label-md text-muted-foreground">Platform</div>
+          <div className="col-span-2 font-label-md text-label-md text-muted-foreground">Timestamp</div>
+          <div className="col-span-2 font-label-md text-label-md text-muted-foreground">Risk Assessment</div>
+          <div className="col-span-1 font-label-md text-label-md text-muted-foreground">Recommendation</div>
+          <div className="col-span-2 font-label-md text-label-md text-muted-foreground text-right">Action</div>
         </div>
 
         {/* Loading state */}
         {loading && (
           <div className="px-6 py-16 text-center">
-            <span className="material-symbols-outlined text-3xl text-outline animate-spin mb-3 block">progress_activity</span>
-            <span className="font-label-md text-on-surface-variant">Loading sessions…</span>
+            <span className="material-symbols-outlined text-3xl text-muted-foreground animate-spin mb-3 block">progress_activity</span>
+            <span className="font-label-md text-muted-foreground">Loading sessions…</span>
           </div>
         )}
 
@@ -91,14 +91,14 @@ const SessionHistory = () => {
         {/* Empty state */}
         {!loading && !error && display.length === 0 && (
           <div className="px-6 py-16 text-center">
-            <span className="material-symbols-outlined text-4xl text-outline mb-3 block">inbox</span>
-            <span className="font-label-md text-on-surface-variant">No sessions found. Upload a chat log or audio to get started.</span>
+            <span className="material-symbols-outlined text-4xl text-muted-foreground mb-3 block">inbox</span>
+            <span className="font-label-md text-muted-foreground">No sessions found. Upload a chat log or audio to get started.</span>
           </div>
         )}
 
         {/* Table rows */}
         {!loading && display.length > 0 && (
-          <div className="divide-y divide-outline-variant/20">
+          <div className="divide-y divide-border/20">
             {display.map((s) => {
               const id = s.session_id || '—'
               const shortId = typeof id === 'string' && id.length > 12 ? id.slice(0, 8) + '…' : id
@@ -109,14 +109,14 @@ const SessionHistory = () => {
               const rec = recStyles[s.recommendation] || recStyles.monitor
               const platform = s.platform || '—'
               return (
-                <div key={id} className="grid grid-cols-12 gap-4 px-6 py-5 items-center hover:bg-surface-container-low/50 transition-colors duration-200">
-                  <div className="col-span-3 font-body-md text-body-md text-on-surface font-medium font-mono text-sm truncate" title={id}>
+                <div key={id} className="grid grid-cols-12 gap-4 px-6 py-5 items-center hover:bg-muted/50 transition-colors duration-200">
+                  <div className="col-span-3 font-body-md text-body-md text-foreground font-medium font-mono text-sm truncate" title={id}>
                     {shortId}
                   </div>
-                  <div className="col-span-2 font-body-md text-body-md text-on-surface-variant capitalize">
+                  <div className="col-span-2 font-body-md text-body-md text-muted-foreground capitalize">
                     {platform.replace(/_/g, ' ')}
                   </div>
-                  <div className="col-span-2 font-body-md text-body-md text-on-surface-variant text-sm">{ts}</div>
+                  <div className="col-span-2 font-body-md text-body-md text-muted-foreground text-sm">{ts}</div>
                   <div className="col-span-2">
                     <span className={`inline-flex items-center px-3 py-1 rounded-full font-label-sm text-label-sm gap-1.5 border ${st.badge}`}>
                       <span className={`w-1.5 h-1.5 rounded-full ${st.dot}`}></span>
@@ -131,7 +131,7 @@ const SessionHistory = () => {
                   <div className="col-span-2 text-right">
                     <button
                       onClick={() => handleViewSession(id)}
-                      className="px-4 py-2 rounded-lg bg-surface-container hover:bg-surface-container-highest text-primary font-label-md text-label-md transition-all border border-primary/10 inline-flex items-center gap-1.5"
+                      className="px-4 py-2 rounded-lg bg-secondary hover:bg-secondary/80 text-primary font-label-md text-label-md transition-all border border-primary/10 inline-flex items-center gap-1.5"
                     >
                       <span className="material-symbols-outlined text-[16px]">visibility</span>
                       View Details
@@ -144,24 +144,35 @@ const SessionHistory = () => {
         )}
 
         {/* Pagination footer */}
-        <div className="px-6 py-4 border-t border-outline-variant/30 flex justify-between items-center bg-surface-container-low/30">
-          <span className="font-label-sm text-label-sm text-outline">
+        <div className="px-6 py-4 border-t border-border/50 flex justify-between items-center bg-muted/30">
+          <span className="font-label-sm text-label-sm text-muted-foreground">
             {loading ? '…' : `Showing ${display.length} session${display.length !== 1 ? 's' : ''} (page ${page + 1})`}
           </span>
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
             <button
-              disabled={page === 0}
-              onClick={() => setPage(p => Math.max(0, p - 1))}
-              className={`p-2 rounded-lg bg-surface border border-outline-variant/50 transition-all ${page === 0 ? 'text-outline opacity-50 cursor-not-allowed' : 'text-on-surface hover:bg-surface-variant'}`}
+              className="button-3d"
+              onClick={() => {
+                if (page > 0) setPage(p => p - 1)
+              }}
             >
-              <span className="material-symbols-outlined text-sm">chevron_left</span>
+              <div className="button-top">
+                <span className="material-symbols-outlined text-[16px]">chevron_left</span>
+              </div>
+              <div className="button-bottom" />
+              <div className="button-base" />
             </button>
+            
             <button
-              disabled={!hasMore}
-              onClick={() => setPage(p => p + 1)}
-              className={`p-2 rounded-lg bg-surface border border-outline-variant/50 transition-all ${!hasMore ? 'text-outline opacity-50 cursor-not-allowed' : 'text-on-surface hover:bg-surface-variant'}`}
+              className="button-3d"
+              onClick={() => {
+                if (hasMore) setPage(p => p + 1)
+              }}
             >
-              <span className="material-symbols-outlined text-sm">chevron_right</span>
+              <div className="button-top">
+                <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+              </div>
+              <div className="button-bottom" />
+              <div className="button-base" />
             </button>
           </div>
         </div>

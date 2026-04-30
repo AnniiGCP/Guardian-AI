@@ -179,20 +179,20 @@ const Upload = () => {
             <span className="material-symbols-outlined text-green-600 text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
           </div>
 
-          <h2 className="font-display-sm text-display-sm text-on-surface mb-2">Analysis Submitted</h2>
-          <p className="font-body-lg text-body-lg text-on-surface-variant mb-6">
+          <h2 className="font-display-sm text-display-sm text-foreground mb-2">Analysis Submitted</h2>
+          <p className="font-body-lg text-body-lg text-muted-foreground mb-6">
             Your {result.type === 'audio' ? 'audio recording' : 'chat log'} has been submitted for analysis.
           </p>
 
           {/* Session info */}
-          <div className="bg-surface-container-low/50 rounded-xl p-5 mb-6 text-left space-y-3">
+          <div className="bg-muted/50 rounded-xl p-5 mb-6 text-left space-y-3">
             <div className="flex items-center justify-between">
-              <span className="font-label-md text-label-md text-on-surface-variant">Session ID</span>
-              <span className="font-body-md text-body-md text-on-surface font-mono text-sm">{result.session_id}</span>
+              <span className="font-label-md text-label-md text-muted-foreground">Session ID</span>
+              <span className="font-body-md text-body-md text-foreground font-mono text-sm">{result.session_id}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="font-label-md text-label-md text-on-surface-variant">Status</span>
-              <span className="px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 font-label-sm text-label-sm flex items-center gap-1.5">
+              <span className="font-label-md text-label-md text-muted-foreground">Status</span>
+              <span className="px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 font-label-sm text-label-sm flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
                 {result.status || 'processing'}
               </span>
@@ -201,9 +201,9 @@ const Upload = () => {
 
           {/* Transcript preview for audio */}
           {result.transcript && (
-            <div className="bg-surface-container-low/50 rounded-xl p-5 mb-6 text-left">
-              <div className="font-label-md text-label-md text-on-surface-variant mb-2">Transcript</div>
-              <p className="font-body-md text-body-md text-on-surface italic leading-relaxed max-h-[200px] overflow-y-auto">
+            <div className="bg-muted/50 rounded-xl p-5 mb-6 text-left">
+              <div className="font-label-md text-label-md text-muted-foreground mb-2">Transcript</div>
+              <p className="font-body-md text-body-md text-foreground italic leading-relaxed max-h-[200px] overflow-y-auto">
                 "{result.transcript}"
               </p>
             </div>
@@ -213,14 +213,14 @@ const Upload = () => {
           <div className="flex gap-3 justify-center">
             <button
               onClick={handleViewResults}
-              className="px-6 py-3 bg-primary text-on-primary rounded-xl font-label-lg text-label-lg hover:bg-primary/90 transition-all duration-200 shadow-md hover:shadow-lg flex items-center gap-2"
+              className="px-6 py-3 bg-primary text-primary-foreground rounded-xl font-label-lg text-label-lg hover:bg-primary/90 transition-all duration-200 shadow-md hover:shadow-lg flex items-center gap-2"
             >
               <span className="material-symbols-outlined text-[18px]">visibility</span>
               View Results
             </button>
             <button
               onClick={handleReset}
-              className="px-6 py-3 bg-surface-container hover:bg-surface-container-highest text-on-surface rounded-xl font-label-lg text-label-lg transition-all duration-200 border border-outline-variant/30 flex items-center gap-2"
+              className="px-6 py-3 bg-secondary hover:bg-secondary/80 text-foreground rounded-xl font-label-lg text-label-lg transition-all duration-200 border border-border/50 flex items-center gap-2"
             >
               <span className="material-symbols-outlined text-[18px]">add</span>
               New Upload
@@ -233,24 +233,27 @@ const Upload = () => {
 
   // ─── Render: Upload form ─────────────────────────────
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-3xl mx-auto relative">
+      {/* Dynamic Background Glow */}
+      <div className={`absolute -inset-20 blur-[120px] opacity-15 -z-10 transition-all duration-1000 ${activeTab === 'audio' ? 'bg-brand-pink' : 'bg-primary'}`}></div>
+
       {/* Header */}
       <div className="mb-8">
-        <h1 className="font-display-sm text-display-sm text-on-surface mb-2">Upload for Analysis</h1>
-        <p className="font-body-lg text-body-lg text-on-surface-variant">
+        <h1 className="font-display-sm text-display-sm text-foreground mb-2">Upload for Analysis</h1>
+        <p className="font-body-lg text-body-lg text-muted-foreground">
           Submit chat logs or audio recordings for grooming pattern analysis.
         </p>
       </div>
 
       {/* Tab selector */}
       <div className="glass-card rounded-2xl overflow-hidden">
-        <div className="flex border-b border-outline-variant/20">
+        <div className="flex border-b border-border/50">
           <button
             onClick={() => { setActiveTab('json'); setError(null) }}
             className={`flex-1 py-4 px-6 font-label-lg text-label-lg flex items-center justify-center gap-2 transition-all duration-200 border-b-2 ${
               activeTab === 'json'
                 ? 'border-primary text-primary bg-primary/5'
-                : 'border-transparent text-on-surface-variant hover:text-on-surface hover:bg-surface/50'
+                : 'border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50'
             }`}
           >
             <span className="material-symbols-outlined text-[20px]">chat</span>
@@ -260,8 +263,8 @@ const Upload = () => {
             onClick={() => { setActiveTab('audio'); setError(null) }}
             className={`flex-1 py-4 px-6 font-label-lg text-label-lg flex items-center justify-center gap-2 transition-all duration-200 border-b-2 ${
               activeTab === 'audio'
-                ? 'border-primary text-primary bg-primary/5'
-                : 'border-transparent text-on-surface-variant hover:text-on-surface hover:bg-surface/50'
+                ? 'border-brand-pink text-brand-pink bg-brand-pink/5'
+                : 'border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50'
             }`}
           >
             <span className="material-symbols-outlined text-[20px]">mic</span>
@@ -278,7 +281,7 @@ const Upload = () => {
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={handleJsonDrop}
                 onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-outline-variant/40 hover:border-primary/50 rounded-xl p-6 text-center cursor-pointer transition-all duration-200 hover:bg-primary/[0.02] group"
+                className="border-2 border-dashed border-border hover:border-primary/50 rounded-xl p-6 text-center cursor-pointer transition-all duration-200 hover:bg-primary/[0.02] group"
               >
                 <input
                   ref={fileInputRef}
@@ -287,28 +290,28 @@ const Upload = () => {
                   onChange={handleJsonFile}
                   className="hidden"
                 />
-                <span className="material-symbols-outlined text-3xl text-outline group-hover:text-primary transition-colors mb-2 block">upload_file</span>
+                <span className="material-symbols-outlined text-3xl text-muted-foreground group-hover:text-primary transition-colors mb-2 block">upload_file</span>
                 {jsonFileName ? (
                   <div>
-                    <div className="font-label-md text-on-surface flex items-center justify-center gap-2">
+                    <div className="font-label-md text-foreground flex items-center justify-center gap-2">
                       <span className="material-symbols-outlined text-[16px] text-primary">description</span>
                       {jsonFileName}
                     </div>
-                    <div className="font-label-sm text-on-surface-variant mt-1">Click to choose a different file</div>
+                    <div className="font-label-sm text-muted-foreground mt-1">Click to choose a different file</div>
                   </div>
                 ) : (
                   <div>
-                    <div className="font-label-md text-on-surface-variant">Drop a .json file here or click to browse</div>
-                    <div className="font-label-sm text-outline mt-1">Supports .json files</div>
+                    <div className="font-label-md text-muted-foreground">Drop a .json file here or click to browse</div>
+                    <div className="font-label-sm text-muted-foreground/70 mt-1">Supports .json files</div>
                   </div>
                 )}
               </div>
 
               {/* Or divider */}
               <div className="flex items-center gap-4">
-                <div className="flex-1 h-px bg-outline-variant/20"></div>
-                <span className="font-label-sm text-label-sm text-outline">or paste JSON directly</span>
-                <div className="flex-1 h-px bg-outline-variant/20"></div>
+                <div className="flex-1 h-px bg-border/50"></div>
+                <span className="font-label-sm text-label-sm text-muted-foreground">or paste JSON directly</span>
+                <div className="flex-1 h-px bg-border/50"></div>
               </div>
 
               {/* Textarea */}
@@ -318,12 +321,12 @@ const Upload = () => {
                   onChange={(e) => { setJsonText(e.target.value); setError(null) }}
                   placeholder={SAMPLE_JSON}
                   rows={12}
-                  className="w-full bg-surface-container-low/50 border border-outline-variant/30 rounded-xl p-4 font-mono text-sm text-on-surface placeholder:text-outline/40 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/10 transition-all resize-y"
+                  className="w-full bg-muted/50 border border-border/50 rounded-xl p-4 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/10 transition-all resize-y"
                 />
                 {jsonText && (
                   <button
                     onClick={() => { setJsonText(''); setJsonFileName(''); setError(null) }}
-                    className="absolute top-3 right-3 p-1 rounded-md hover:bg-surface-container transition-colors text-outline hover:text-on-surface"
+                    className="absolute top-3 right-3 p-1 rounded-md hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
                     title="Clear"
                   >
                     <span className="material-symbols-outlined text-[18px]">close</span>
@@ -337,7 +340,7 @@ const Upload = () => {
                   <span className="material-symbols-outlined text-[14px]">info</span>
                   Expected JSON format
                 </summary>
-                <pre className="mt-2 p-3 bg-surface-container-low/70 rounded-lg text-xs font-mono text-on-surface-variant overflow-x-auto">
+                <pre className="mt-2 p-3 bg-muted/70 rounded-lg text-xs font-mono text-muted-foreground overflow-x-auto">
 {SAMPLE_JSON}
                 </pre>
               </details>
@@ -346,7 +349,7 @@ const Upload = () => {
               <button
                 onClick={handleJsonSubmit}
                 disabled={loading || !jsonText.trim()}
-                className="w-full py-3.5 bg-primary text-on-primary rounded-xl font-label-lg text-label-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+                className="w-full py-3.5 bg-primary text-primary-foreground rounded-xl font-label-lg text-label-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2"
               >
                 {loading ? (
                   <>
@@ -371,7 +374,11 @@ const Upload = () => {
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={handleAudioDrop}
                 onClick={() => audioInputRef.current?.click()}
-                className="border-2 border-dashed border-outline-variant/40 hover:border-primary/50 rounded-xl p-10 text-center cursor-pointer transition-all duration-200 hover:bg-primary/[0.02] group"
+                className={`border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-all duration-200 group ${
+                  activeTab === 'audio' 
+                    ? 'border-brand-pink/30 hover:border-brand-pink hover:bg-brand-pink/[0.02]' 
+                    : 'border-border hover:border-primary/50 hover:bg-primary/[0.02]'
+                }`}
               >
                 <input
                   ref={audioInputRef}
@@ -382,28 +389,28 @@ const Upload = () => {
                 />
                 {audioFile ? (
                   <div>
-                    <span className="material-symbols-outlined text-4xl text-primary mb-3 block">audio_file</span>
-                    <div className="font-label-md text-on-surface flex items-center justify-center gap-2 mb-1">
+                    <span className="material-symbols-outlined text-4xl text-brand-pink mb-3 block">audio_file</span>
+                    <div className="font-label-md text-foreground flex items-center justify-center gap-2 mb-1">
                       {audioFile.name}
                     </div>
-                    <div className="font-label-sm text-on-surface-variant">
+                    <div className="font-label-sm text-muted-foreground">
                       {(audioFile.size / (1024 * 1024)).toFixed(2)} MB
                     </div>
                     <div className="font-label-sm text-primary mt-2">Click to choose a different file</div>
                   </div>
                 ) : (
                   <div>
-                    <span className="material-symbols-outlined text-4xl text-outline group-hover:text-primary transition-colors mb-3 block">graphic_eq</span>
-                    <div className="font-label-md text-on-surface-variant mb-1">Drop an audio file here or click to browse</div>
-                    <div className="font-label-sm text-outline">Supports WAV, MP3, M4A, OGG, WebM, FLAC</div>
+                    <span className="material-symbols-outlined text-4xl text-muted-foreground group-hover:text-primary transition-colors mb-3 block">graphic_eq</span>
+                    <div className="font-label-md text-muted-foreground mb-1">Drop an audio file here or click to browse</div>
+                    <div className="font-label-sm text-muted-foreground/70">Supports WAV, MP3, M4A, OGG, WebM, FLAC</div>
                   </div>
                 )}
               </div>
 
               {/* Info card */}
-              <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 flex items-start gap-3">
-                <span className="material-symbols-outlined text-blue-600 text-[20px] mt-0.5">info</span>
-                <div className="text-sm text-blue-800">
+              <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4 flex items-start gap-3">
+                <span className="material-symbols-outlined text-blue-500 text-[20px] mt-0.5">info</span>
+                <div className="text-sm text-blue-700 dark:text-blue-400">
                   <strong>How it works:</strong> Your audio file will be transcribed using Whisper STT, then the transcript is automatically analyzed for grooming patterns — just like a chat log.
                 </div>
               </div>
@@ -412,7 +419,7 @@ const Upload = () => {
               <button
                 onClick={handleAudioSubmit}
                 disabled={loading || !audioFile}
-                className="w-full py-3.5 bg-primary text-on-primary rounded-xl font-label-lg text-label-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+                className="w-full py-3.5 bg-brand-pink text-white rounded-xl font-label-lg text-label-lg hover:bg-brand-pink/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2"
               >
                 {loading ? (
                   <>
@@ -431,9 +438,9 @@ const Upload = () => {
 
           {/* Error display */}
           {error && (
-            <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
-              <span className="material-symbols-outlined text-red-600 text-[20px] mt-0.5" style={{ fontVariationSettings: "'FILL' 1" }}>error</span>
-              <div className="text-sm text-red-800">{error}</div>
+            <div className="mt-4 p-4 bg-red-500/10 border border-red-500/30 rounded-xl flex items-start gap-3">
+              <span className="material-symbols-outlined text-red-500 text-[20px] mt-0.5" style={{ fontVariationSettings: "'FILL' 1" }}>error</span>
+              <div className="text-sm text-red-700 dark:text-red-400">{error}</div>
             </div>
           )}
         </div>
