@@ -28,7 +28,6 @@ venv/
 ENV/
 env/
 .env
-*/.venv/
 
 # IDE
 .vscode/
@@ -53,3 +52,9 @@ logs/
 # Windows
 *.Zone.Identifier
 *:Zone.Identifier
+
+# Local trained model artifacts (do not commit)
+ml/models/grooming_model/saved_model/
+ml/models/grooming_model/saved_model_bert/
+ml/models/grooming_model/saved_model_enhanced/
+ml/models/url_model/saved_model/

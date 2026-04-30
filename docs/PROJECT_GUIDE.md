@@ -184,23 +184,23 @@ You own everything between the frontend and the ML model. FastAPI, PostgreSQL, W
 - [x] Share JSON contract with team — **lock it at 1700**
 
 #### Phase 1 (1700–2100) — Core build
-- [ ] `POST /ingest` — accepts JSON body (array of messages), returns `session_id`
-- [ ] `POST /ingest/audio` — accepts multipart audio file, runs Whisper STT, converts transcript to message array, passes to same pipeline as `/ingest`
-- [ ] `GET /session/{session_id}` — returns full risk JSON for a session
-- [ ] `GET /sessions` — returns list of past sessions (id, score, timestamp, recommendation)
-- [ ] `WebSocket /ws/alerts` — broadcasts when a session analysis completes
-- [ ] Scoring engine: takes Jaggu's raw output, applies weighting, writes to DB
-- [ ] Whisper integration: `whisper.load_model("base")`, transcribe audio, chunk into messages by pause detection
+- [x] `POST /ingest` — accepts JSON body (array of messages), returns `session_id`
+- [x] `POST /ingest/audio` — accepts multipart audio file, runs Whisper STT, converts transcript to message array, passes to same pipeline as `/ingest`
+- [x] `GET /session/{session_id}` — returns full risk JSON for a session
+- [x] `GET /sessions` — returns list of past sessions (id, score, timestamp, recommendation)
+- [x] `WebSocket /ws/alerts` — broadcasts when a session analysis completes
+- [x] Scoring engine: takes Jaggu's raw output, applies weighting, writes to DB
+- [x] Whisper integration: `whisper.load_model("base")`, transcribe audio, chunk into messages by pause detection
 
 #### Phase 2 (2100–0100) — Integration
-- [ ] Wire Jaggu's ML module into `/ingest` endpoint
+- [x] Wire Jaggu's ML module into `/ingest` endpoint
 - [ ] Test full flow: upload JSON → ML runs → score in DB → WebSocket fires
 - [ ] Test audio flow: upload MP3 → Whisper → ML → score
-- [ ] CORS configured for React frontend
-- [ ] Error handling: bad JSON, empty audio, ML timeout fallback
+- [x] CORS configured for React frontend
+- [x] Error handling: bad JSON, empty audio, ML timeout fallback
 
 #### Phase 3 (0100–0400) — Polish
-- [ ] Health check endpoint `GET /health`
+- [x] Health check endpoint `GET /health`
 - [ ] Seed DB with demo session results (so dashboard looks populated on first open)
 - [ ] Confirm WebSocket works in demo environment
 
@@ -313,26 +313,26 @@ You own the intelligence of the product. BERT sequence classifier + Groq intent 
 ### Deliverables checklist
 
 #### Phase 0 (1500–1700) — Setup
-- [ ] Test Groq API key — run a hello world call with `llama-3.3-70b-versatile`
-- [ ] Install: `transformers torch groq sentence-transformers`
-- [ ] Confirm HuggingFace model download works: `bert-base-multilingual-cased`
+- [x] Test Groq API key — run a hello world call with `llama-3.3-70b-versatile`
+- [x] Install: `transformers torch groq sentence-transformers`
+- [x] Confirm HuggingFace model download works: `bert-base-multilingual-cased`
 - [ ] Jupyter notebook environment ready
-- [ ] Read and agree JSON contract
+- [x] Read and agree JSON contract
 
 #### Phase 1 (1700–2100) — Core build
 - [ ] **Hinglish tokeniser** — use `bert-base-multilingual-cased` which handles Hindi + English natively. Test with: *"yaar kisi ko mat batana"* and *"free coins dunga bhai"*
-- [ ] **BERT classifier** — fine-tune or use zero-shot on PAN 2012 labels. Classify each message as: `grooming` / `normal`. Use `pipeline("text-classification")`.
-- [ ] **Groq prompt** — send sliding window of last 10 messages to Groq. Get back structured intent analysis. See prompt below.
-- [ ] **Risk scorer** — combine BERT confidence + Groq score into weighted 0–100. See formula below.
-- [ ] **Stage classifier** — rule-based from flag types. See logic below.
-- [ ] **Drift engine** — check timestamps for late-night patterns, frequency spikes.
-- [ ] Wrap everything into single function: `analyse(messages: list[dict]) -> dict` that returns the JSON contract.
+- [x] **BERT classifier** — fine-tune or use zero-shot on PAN 2012 labels. Classify each message as: `grooming` / `normal`. Use `pipeline("text-classification")`.
+- [x] **Groq prompt** — send sliding window of last 10 messages to Groq. Get back structured intent analysis. See prompt below.
+- [x] **Risk scorer** — combine BERT confidence + Groq score into weighted 0–100. See formula below.
+- [x] **Stage classifier** — rule-based from flag types. See logic below.
+- [x] **Drift engine** — check timestamps for late-night patterns, frequency spikes.
+- [x] Wrap everything into single function: `analyse(messages: list[dict]) -> dict` that returns the JSON contract.
 
 #### Phase 2 (2100–0100) — Integration with Jay
-- [ ] Expose `analyse()` as importable module (not a script)
-- [ ] Jay calls your function from FastAPI endpoint
+- [x] Expose `analyse()` as importable module (not a script)
+- [x] Jay calls your function from FastAPI endpoint
 - [ ] Test with real PAN 2012 samples — verify output matches contract schema exactly
-- [ ] Fallback: if Groq API fails/times out, return BERT-only result with `confidence: 0.7`
+- [x] Fallback: if Groq API fails/times out, return BERT-only result with `confidence: 0.7`
 
 #### Phase 3 (0100–0400) — Polish
 - [ ] Test Hinglish demo conversation — verify flags fire correctly
