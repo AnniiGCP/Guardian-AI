@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: guardian-ai-frontend
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm install -g serve && serve -s dist -l 3000
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://guardian-ai-api-c2d5132c.fastapicloud.dev/
+      - key: VITE_WS_URL
+        value: wss://guardian-ai-api-c2d5132c.fastapicloud.dev/
