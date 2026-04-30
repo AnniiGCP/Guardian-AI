@@ -75,12 +75,12 @@ def _keyword_flags(messages: list[dict[str, Any]]) -> list[dict[str, Any]]:
     # first pattern whose keyword fires (one flag per message per scan pass).
     patterns = [
         ("request_escalation", ["send photo", "send a photo", "pictures", "pic", "video call", "meet in private"], "high"),
-        ("secrecy_request", ["delete this", "delete these", "no one else", "dont tell anyone", "don't tell anyone"], "high"),
+        ("secrecy_request", ["delete this", "delete these", "no one else", "dont tell anyone", "don't tell anyone", "kisi ko mat batana", "sirf hamare beech", "apni mummy ko mat bata"], "high"),
         ("platform_hop", ["snapchat", "whatsapp", "signal", "telegram"], "medium"),
-        ("isolation_tactic", ["dont tell", "don't tell", "keep this between us", "secret", "private"], "high"),
+        ("isolation_tactic", ["dont tell", "don't tell", "keep this between us", "secret", "private", "mat batana", "beech mein rahe"], "high"),
         ("gift_offering", ["robux", "free coins", "money", "gift", "buy you", "send you"], "medium"),
+        ("trust_building", ["you\'re so mature", "so mature", "special", "understand you", "trust me", "beautiful", "handsome", "samajhdar", "bahut mature"], "medium"),
         ("age_probing", ["how old", "your age", "home alone", "alone right now", "are you alone"], "medium"),
-        ("trust_building", ["you\'re so mature", "so mature", "special", "understand you", "trust me", "beautiful", "handsome"], "medium"),
     ]
 
     flags: list[dict[str, Any]] = []
@@ -108,87 +108,163 @@ def _keyword_flags(messages: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return flags
 
 
+def _heuristic_fallback(messages: list[dict[str, Any]], reason: str) -> dict[str, Any]:
+    """Return a keyword-heuristic result when no LLM is available."""
+    flags = _keyword_flags(messages)
+    return {
+        "grooming_detected": bool(flags),
+        "intent_score": 0.1 if not flags else min(0.55 + 0.1 * len(flags), 0.95),
+        "flags": flags,
+        "dominant_pattern": classify_stage(flags, {"trust_building": False, "isolation": False, "secrecy": False, "escalation": False}),
+        "reasoning": reason,
+    }
+
+
+def _validate_llm_flags(raw_flags: list) -> list[dict[str, Any]]:
+    """Validate and normalise LLM-returned flags to strict contract enums."""
+    validated: list[dict[str, Any]] = []
+    for flag in raw_flags:
+        if not isinstance(flag, dict):
+            continue
+        ftype = str(flag.get("type", "")).lower().strip().replace(" ", "_")
+        if ftype not in _VALID_FLAG_TYPES:
+            continue
+        severity = str(flag.get("severity", "medium")).lower().strip()
+        if severity not in _VALID_SEVERITIES:
+            severity = "medium"
+        validated.append({
+            "type": ftype,
+            "snippet": str(flag.get("snippet", "")),
+            "severity": severity,
+            "message_index": int(flag.get("message_index", 0)),
+        })
+    return validated
+
+
+# Ordered list of models to try.  LiteLLM routes based on prefix.
+# Env vars consumed:  GROQ_API_KEY, NVIDIA_NIM_API_KEY / NVIDIA_API_KEY
+_LLM_MODELS = [
+    "groq/llama-3.3-70b-versatile",
+    "nvidia_nim/meta/llama-3.1-70b-instruct",
+    "groq/llama-3.1-8b-instant",
+]
+
+
 def groq_analyse(messages: list[dict[str, Any]]) -> dict[str, Any]:
-    """Optional Groq call with deterministic fallback when unavailable."""
+    """LLM intent analysis with automatic provider fallback via LiteLLM.
+
+    Tries each model in _LLM_MODELS in order.  Falls back to keyword
+    heuristics if every LLM call fails or no API keys are configured.
+    """
+    # Quick check: is *any* key configured?
+    has_groq = bool(os.getenv("GROQ_API_KEY"))
+    has_nvidia = bool(os.getenv("NVIDIA_NIM_API_KEY") or os.getenv("NVIDIA_API_KEY"))
+    if not has_groq and not has_nvidia:
+        return _heuristic_fallback(messages, "No LLM API keys configured; heuristic fallback used.")
+
+    # Map NVIDIA_API_KEY → NVIDIA_NIM_API_KEY if only the former is set
+    if not os.getenv("NVIDIA_NIM_API_KEY") and os.getenv("NVIDIA_API_KEY"):
+        os.environ["NVIDIA_NIM_API_KEY"] = os.environ["NVIDIA_API_KEY"]
+
+    try:
+        import litellm
+        litellm.drop_params = True           # silently ignore unsupported params
+        litellm.set_verbose = False
+    except ImportError:
+        # Fall back to direct Groq SDK if litellm not installed
+        return _groq_sdk_fallback(messages)
+
+    convo_text = "\n".join([
+        f"{m.get('sender', 'unknown')}: {m.get('text', '')}"
+        for m in messages[-10:]
+    ])
+
+    llm_messages = [
+        {"role": "system", "content": GROQ_SYSTEM_PROMPT},
+        {"role": "user", "content": f"Analyse this conversation:\n\n{convo_text}"},
+    ]
+
+    last_error = None
+    for model in _LLM_MODELS:
+        # Skip models whose provider key is missing
+        if model.startswith("groq/") and not has_groq:
+            continue
+        if model.startswith("nvidia_nim/") and not has_nvidia:
+            continue
+
+        try:
+            response = litellm.completion(
+                model=model,
+                messages=llm_messages,
+                temperature=0.1,
+                max_tokens=500,
+                timeout=15,
+            )
+            raw_content = response.choices[0].message.content or ""
+            # Strip markdown fences
+            raw_content = re.sub(r"^```(?:json)?\s*", "", raw_content.strip())
+            raw_content = re.sub(r"\s*```$", "", raw_content.strip())
+            parsed = json.loads(raw_content)
+
+            parsed.setdefault("flags", [])
+            parsed.setdefault("intent_score", 0.5)
+            parsed.setdefault("dominant_pattern",
+                              classify_stage(parsed["flags"],
+                                             {"trust_building": False, "isolation": False, "secrecy": False, "escalation": False}))
+            parsed.setdefault("reasoning", f"LLM analysis completed via {model}.")
+            parsed["flags"] = _validate_llm_flags(parsed["flags"])
+            return parsed
+
+        except json.JSONDecodeError:
+            last_error = f"{model} returned invalid JSON"
+        except Exception as exc:
+            last_error = f"{model}: {exc}"
+
+    return _heuristic_fallback(messages, f"All LLM calls failed ({last_error}); heuristic fallback used.")
+
+
+def _groq_sdk_fallback(messages: list[dict[str, Any]]) -> dict[str, Any]:
+    """Direct Groq SDK call when LiteLLM is not installed."""
     api_key = os.getenv("GROQ_API_KEY")
     if not api_key:
-        flags = _keyword_flags(messages)
-        return {
-            "grooming_detected": bool(flags),
-            "intent_score": 0.1 if not flags else min(0.55 + 0.1 * len(flags), 0.95),
-            "flags": flags,
-            "dominant_pattern": classify_stage(flags, {"trust_building": False, "isolation": False, "secrecy": False, "escalation": False}),
-            "reasoning": "Heuristic fallback used because GROQ_API_KEY is not configured.",
-        }
+        return _heuristic_fallback(messages, "GROQ_API_KEY not set and litellm unavailable.")
 
     try:
         from groq import Groq
-    except Exception:
-        flags = _keyword_flags(messages)
-        return {
-            "grooming_detected": bool(flags),
-            "intent_score": 0.1 if not flags else min(0.55 + 0.1 * len(flags), 0.95),
-            "flags": flags,
-            "dominant_pattern": classify_stage(flags, {"trust_building": False, "isolation": False, "secrecy": False, "escalation": False}),
-            "reasoning": "Groq SDK not available; heuristic fallback used.",
-        }
+    except ImportError:
+        return _heuristic_fallback(messages, "Neither litellm nor groq SDK available.")
 
-    convo_text = "\n".join([f"{message.get('sender', 'unknown')}: {message.get('text', '')}" for message in messages[-10:]])
-    client = Groq(api_key=api_key)
-    response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=[
-            {"role": "system", "content": GROQ_SYSTEM_PROMPT},
-            {"role": "user", "content": f"Analyse this conversation:\n\n{convo_text}"},
-        ],
-        temperature=0.1,
-        max_tokens=500,
-    )
+    convo_text = "\n".join([
+        f"{m.get('sender', 'unknown')}: {m.get('text', '')}"
+        for m in messages[-10:]
+    ])
 
     try:
-        raw_content = response.choices[0].message.content
-        # Strip markdown fences if Groq wraps them despite the prompt
+        client = Groq(api_key=api_key)
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[
+                {"role": "system", "content": GROQ_SYSTEM_PROMPT},
+                {"role": "user", "content": f"Analyse this conversation:\n\n{convo_text}"},
+            ],
+            temperature=0.1,
+            max_tokens=500,
+        )
+        raw_content = response.choices[0].message.content or ""
         raw_content = re.sub(r"^```(?:json)?\s*", "", raw_content.strip())
         raw_content = re.sub(r"\s*```$", "", raw_content.strip())
         parsed = json.loads(raw_content)
 
-        if "flags" not in parsed:
-            parsed["flags"] = []
-        if "intent_score" not in parsed:
-            parsed["intent_score"] = 0.5
-        if "dominant_pattern" not in parsed:
-            parsed["dominant_pattern"] = classify_stage(parsed["flags"], {"trust_building": False, "isolation": False, "secrecy": False, "escalation": False})
-        if "reasoning" not in parsed:
-            parsed["reasoning"] = "Groq analysis completed."
-
-        # Validate and normalise flags to strict contract enums
-        validated_flags: list[dict[str, Any]] = []
-        for flag in parsed.get("flags", []):
-            if not isinstance(flag, dict):
-                continue
-            ftype = str(flag.get("type", "")).lower().strip().replace(" ", "_")
-            if ftype not in _VALID_FLAG_TYPES:
-                continue
-            severity = str(flag.get("severity", "medium")).lower().strip()
-            if severity not in _VALID_SEVERITIES:
-                severity = "medium"
-            validated_flags.append({
-                "type": ftype,
-                "snippet": str(flag.get("snippet", "")),
-                "severity": severity,
-                "message_index": int(flag.get("message_index", 0)),
-            })
-        parsed["flags"] = validated_flags
+        parsed.setdefault("flags", [])
+        parsed.setdefault("intent_score", 0.5)
+        parsed.setdefault("dominant_pattern",
+                          classify_stage(parsed["flags"],
+                                         {"trust_building": False, "isolation": False, "secrecy": False, "escalation": False}))
+        parsed.setdefault("reasoning", "Groq SDK analysis completed.")
+        parsed["flags"] = _validate_llm_flags(parsed["flags"])
         return parsed
     except Exception:
-        flags = _keyword_flags(messages)
-        return {
-            "grooming_detected": bool(flags),
-            "intent_score": 0.1 if not flags else min(0.55 + 0.1 * len(flags), 0.95),
-            "flags": flags,
-            "dominant_pattern": classify_stage(flags, {"trust_building": False, "isolation": False, "secrecy": False, "escalation": False}),
-            "reasoning": "Groq returned invalid JSON; heuristic fallback used.",
-        }
+        return _heuristic_fallback(messages, "Groq SDK call failed; heuristic fallback used.")
 
 
 def bert_score(messages: list[dict[str, Any]]) -> float:
@@ -202,7 +278,11 @@ def bert_score(messages: list[dict[str, Any]]) -> float:
         result = bert_predict(full_text)
         return float(result.get("probability", 0.0))
     except Exception:
-        return 0.0
+        # Keep risk scoring useful for demos when model artifacts are unavailable.
+        flags = _keyword_flags(messages)
+        if not flags:
+            return 0.05
+        return min(0.25 + 0.15 * len(flags), 0.9)
 
 
 def calculate_risk_score(bert_score_value: float, groq_score: float, flag_count: int) -> int:
