@@ -25,22 +25,18 @@ const Layout = () => {
   }, []);
 
   const navLinks = [
-    { name: 'Dashboard', path: '/', icon: 'dashboard' },
-    { name: 'Upload', path: '/upload', icon: 'upload' },
-    { name: 'Location', path: '/location', icon: 'location_on' },
-    { name: 'Social Media', path: '/social', icon: 'share' },
-    { name: 'Session History', path: '/history', icon: 'history' },
-    { name: 'Support', path: '/support', icon: 'help_outline' },
+    { name: 'Dashboard', path: '/dashboard', icon: 'dashboard' },
+    { name: 'Upload', path: '/dashboard/upload', icon: 'upload' },
+    { name: 'Location', path: '/dashboard/location', icon: 'location_on' },
+    // { name: 'Social Media', path: '/dashboard/social', icon: 'share' },
+    { name: 'Session History', path: '/dashboard/history', icon: 'history' },
+    { name: 'Settings', path: '/dashboard/settings', icon: 'settings' },
+    { name: 'Support', path: '/dashboard/support', icon: 'help_outline' },
   ];
 
   return (
     <div className="text-foreground font-body-md relative antialiased">
       <DotField className="absolute inset-0 -z-10 pointer-events-none" dotSpacing={14} />
-      {/* Decorative 3D Blobs */}
-      <div className="blob blob-1"></div>
-      <div className="blob blob-2"></div>
-      <div className="blob blob-3"></div>
-
       {/* TopNavBar */}
       <nav className="fixed top-0 right-0 left-0 md:left-64 z-40 border-b border-border/30 bg-background/80 backdrop-blur-xl flex justify-between items-center px-6 h-[76px]">
         <div className="flex items-center gap-md">
@@ -52,7 +48,7 @@ const Layout = () => {
         </div>
         <div className="flex items-center gap-md">
           <div className="flex gap-4 items-center relative" ref={notificationRef}>
-            <button 
+            <button
               onClick={() => setShowNotifications(!showNotifications)}
               className={`transition-all duration-200 p-2 rounded-full relative ${showNotifications ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-muted/50'}`}
             >
@@ -64,12 +60,12 @@ const Layout = () => {
               <div className="absolute top-full mt-3 right-0 w-80 bg-white dark:bg-zinc-950 rounded-2xl p-0 shadow-2xl border border-green-500/30 dark:border-zinc-800 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                 {/* Subtle green internal glow (light) / Gray gradient (dark) */}
                 <div className="absolute inset-0 bg-green-500/[0.02] dark:bg-zinc-900/40 pointer-events-none -z-10"></div>
-                
+
                 <div className="flex items-center justify-between p-4 border-b border-green-500/20 bg-green-500/10 dark:border-zinc-700/30 dark:bg-zinc-800/40">
                   <h4 className="font-headline-sm m-0 text-foreground">Notifications</h4>
                   <span className="text-[10px] uppercase tracking-widest font-bold text-green-600 dark:text-zinc-400 bg-green-500/20 dark:bg-zinc-800/50 px-2 py-0.5 rounded-full">2 New</span>
                 </div>
-                
+
                 <div className="max-h-[360px] overflow-y-auto divide-y divide-border/20">
                   <div className="p-4 hover:bg-red-500/5 transition-colors cursor-pointer group">
                     <div className="flex items-start gap-3">
@@ -119,15 +115,12 @@ const Layout = () => {
               </div>
             )}
 
-            <button 
-              onClick={() => navigate('/settings')}
-              className="text-muted-foreground hover:bg-muted/50 transition-all duration-200 p-2 rounded-full"
-            >
-              <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>settings</span>
-            </button>
+            <div className="p-1">
+              <AnimatedThemeToggler />
+            </div>
           </div>
           <div className="relative" ref={profileRef}>
-            <button 
+            <button
               onClick={() => setShowProfile(!showProfile)}
               className={`w-10 h-10 rounded-full bg-secondary overflow-hidden border-2 transition-all duration-300 ${showProfile ? 'border-primary ring-4 ring-primary/10' : 'border-border hover:border-primary/50'} cursor-pointer hover:scale-95`}
             >
@@ -192,11 +185,11 @@ const Layout = () => {
 
                   <div className="space-y-1">
                     {[
-                      { label: 'Family & Co-Parents', icon: 'group', path: '/settings?tab=family' },
-                      { label: 'Activity Summaries', icon: 'assessment', path: '/settings?tab=reports' },
-                      { label: 'Security & Sessions', icon: 'lock', path: '/settings?tab=account' },
+                      { label: 'Family & Co-Parents', icon: 'group', path: '/dashboard/settings?tab=family' },
+                      { label: 'Activity Summaries', icon: 'assessment', path: '/dashboard/settings?tab=reports' },
+                      { label: 'Security & Sessions', icon: 'lock', path: '/dashboard/settings?tab=account' },
                     ].map(link => (
-                      <button 
+                      <button
                         key={link.label}
                         onClick={() => { navigate(link.path); setShowProfile(false); }}
                         className="w-full flex items-center gap-3.5 p-3 rounded-2xl hover:bg-primary/5 hover:text-primary transition-all group"
@@ -226,16 +219,16 @@ const Layout = () => {
       <div className="flex min-h-screen">
         {/* SideNavBar (Hidden on Mobile) */}
         <aside className="hidden md:flex flex-col h-screen py-6 gap-2 w-64 fixed left-0 top-0 border-r border-border/30 bg-background/80 backdrop-blur-xl z-50 overflow-hidden">
-          {/* Static Background Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/5 pointer-events-none z-0"></div>
-
           <div className="relative z-10 pl-4 pr-6 mb-6 flex items-center gap-3">
-            <div className="w-14 h-14 bg-muted overflow-hidden border-2 border-border shadow-sm flex items-center justify-center rounded-xl bg-primary/5">
-              <img alt="Guardian-AI Logo" className="w-full h-full object-cover" src="/logo.png" />
-            </div>
-            <h2 className="font-headline-md text-headline-md text-foreground">GUARDIAN-AI</h2>
-            {/* <p className="font-label-sm text-label-sm text-muted-foreground">surveillance Active</p> */}
+            <Link to="/" className="flex items-center gap-3">
+              <div className="w-14 h-14 bg-muted overflow-hidden border-2 border-border shadow-sm flex items-center justify-center rounded-xl bg-primary/5 hover:scale-105 transition-transform">
+                <img alt="Guardian-AI Logo" className="w-full h-full object-cover" src="/logo.png" />
+              </div>
+              <h2 className="font-headline-md text-headline-md text-foreground hover:text-primary transition-colors">GUARDIAN-AI</h2>
+            </Link>
           </div>
+
+          <div className="relative z-10 mx-4 h-px bg-border/30 mb-2"></div>
 
           <nav className="relative z-10 flex-1 flex flex-col gap-2 text-sm font-medium">
             {navLinks.map(link => {
@@ -253,10 +246,18 @@ const Layout = () => {
             })}
           </nav>
 
-          {/* ✅ Theme Toggle — pinned to sidebar bottom */}
-          <div className="relative z-10 px-6 pt-4 border-t border-border/30 flex items-center justify-between">
-            <span className="font-label-sm text-label-sm text-muted-foreground">Theme</span>
-            <AnimatedThemeToggler />
+          {/* Sidebar Footer */}
+          <div className="relative z-10 px-5 py-4 border-t border-border/30">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center">
+                <span className="material-symbols-outlined text-primary text-[16px]">shield</span>
+              </div>
+              <div>
+                <div className="text-[11px] font-bold text-foreground leading-tight">Guardian AI</div>
+                <div className="text-[9px] text-muted-foreground">v2.4.0 • Stable</div>
+              </div>
+            </div>
+            <p className="text-[9px] text-muted-foreground/60 leading-relaxed">© 2024 Guardian AI. Keeping children safe online.</p>
           </div>
         </aside>
 

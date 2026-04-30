@@ -1,7 +1,15 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&display=swap');
+
+@layer base {
+  :root {
+    --font-sans: 'Instrument Sans', sans-serif;
+    --font-serif: 'Instrument Serif', serif;
+    --font-heading: 'Instrument Serif', serif;
+  }
+}
 
 @custom-variant dark (&:is(.dark *));
 @config "../tailwind.config.js";
@@ -119,8 +127,9 @@
 }
 
 @theme inline {
-  --font-heading: var(--font-sans);
-  --font-sans: 'Geist Variable', sans-serif;
+  --font-heading: 'Instrument Serif', serif;
+  --font-sans: 'Instrument Sans', sans-serif;
+  --font-serif: 'Instrument Serif', serif;
   --color-sidebar-ring: hsl(var(--sidebar-ring));
   --color-sidebar-border: hsl(var(--sidebar-border));
   --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
@@ -243,42 +252,42 @@
 }
 
 :root {
-  /* ── Light Mode ── (#fffefb cream bg, #00668c teal primary, #71c4ef sky accent) */
-  --background: 45 100% 99%;
-  --foreground: 0 1% 11%;
-  --card: 45 100% 99%;
-  --card-foreground: 0 1% 11%;
-  --popover: 45 100% 99%;
-  --popover-foreground: 0 1% 11%;
-  --primary: 196 100% 27%;
-  --primary-foreground: 45 100% 99%;
-  --secondary: 202 60% 90%;
-  --secondary-foreground: 202 16% 23%;
-  --muted: 45 19% 95%;
-  --muted-foreground: 202 16% 23%;
-  --accent: 200 81% 69%;
-  --accent-foreground: 0 1% 11%;
+  /* ── Light Mode ── (Cream background, Teal primary, River Blue & Pink accents) */
+  --background: 43 30% 93%;
+  --foreground: 30 4% 10%;
+  --card: 44 40% 96%;
+  --card-foreground: 30 4% 10%;
+  --popover: 44 40% 96%;
+  --popover-foreground: 30 4% 10%;
+  --primary: 190 67% 36%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 200 75% 78%;
+  --secondary-foreground: 30 4% 10%;
+  --muted: 40 20% 88%;
+  --muted-foreground: 40 10% 45%;
+  --accent: 336 62% 71%;
+  --accent-foreground: 30 4% 10%;
   --destructive: 0 84.2% 60.2%;
-  --border: 45 4% 79%;
-  --input: 45 4% 79%;
-  --ring: 196 100% 27%;
-  --brand-pink: 343 60% 78%;
-  --brand-sky: 199 60% 80%;
-  --brand-yellow: 38 85% 68%;
-  --chart-1: 196 100% 27%;
-  --chart-2: 200 81% 69%;
-  --chart-3: 202 60% 90%;
-  --chart-4: 43 74% 66%;
-  --chart-5: 27 87% 67%;
+  --border: 40 20% 80%;
+  --input: 40 20% 80%;
+  --ring: 190 67% 36%;
+  --brand-pink: 336 62% 71%;
+  --brand-sky: 200 75% 78%;
+  --brand-yellow: 44 91% 67%;
+  --chart-1: 190 67% 36%;
+  --chart-2: 200 75% 78%;
+  --chart-3: 336 62% 71%;
+  --chart-4: 44 91% 67%;
+  --chart-5: 40 20% 88%;
   --radius: 0.625rem;
-  --sidebar: 45 19% 95%;
-  --sidebar-foreground: 0 1% 11%;
-  --sidebar-primary: 196 100% 27%;
-  --sidebar-primary-foreground: 45 100% 99%;
-  --sidebar-accent: 202 60% 90%;
-  --sidebar-accent-foreground: 0 1% 11%;
-  --sidebar-border: 45 4% 79%;
-  --sidebar-ring: 196 100% 27%;
+  --sidebar: 40 20% 88%;
+  --sidebar-foreground: 30 4% 10%;
+  --sidebar-primary: 190 67% 36%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 200 75% 78%;
+  --sidebar-accent-foreground: 30 4% 10%;
+  --sidebar-border: 40 20% 80%;
+  --sidebar-ring: 190 67% 36%;
 }
 
 .dark {

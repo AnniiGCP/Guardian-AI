@@ -58,8 +58,8 @@ const Upload = () => {
     e.preventDefault()
     const file = e.dataTransfer.files?.[0]
     if (!file) return
-    if (!file.name.endsWith('.json')) {
-      setError('Please drop a .json file')
+    if (!file.name.endsWith('.json') && !file.name.endsWith('.txt')) {
+      setError('Please drop a .json or .txt file')
       return
     }
     setJsonFileName(file.name)
@@ -107,13 +107,35 @@ const Upload = () => {
   // ─── Submit handlers ─────────────────────────────────
   const handleJsonSubmit = async () => {
     if (!jsonText.trim()) {
-      setError('Please paste JSON or upload a .json file')
+      setError('Please paste text/JSON or upload a file')
       return
     }
-    const validationErr = validateJson(jsonText)
-    if (validationErr) {
-      setError(validationErr)
-      return
+
+    let body;
+
+    // Treat as JSON if it looks like a JSON object or array
+    if (jsonText.trim().startsWith('{') || jsonText.trim().startsWith('[')) {
+      const validationErr = validateJson(jsonText)
+      if (validationErr) {
+        setError(validationErr)
+        return
+      }
+      const parsed = JSON.parse(jsonText)
+      body = {
+        platform: parsed.platform || 'json_upload',
+        messages: parsed.messages || parsed,
+      }
+    } else {
+      // Treat as plain text
+      const lines = jsonText.split('\n').filter(line => line.trim())
+      body = {
+        platform: 'text_upload',
+        messages: lines.map(line => ({
+          sender: 'unknown',
+          text: line.trim(),
+          timestamp: new Date().toISOString()
+        }))
+      }
     }
 
     setLoading(true)
@@ -121,15 +143,10 @@ const Upload = () => {
     setResult(null)
 
     try {
-      const parsed = JSON.parse(jsonText)
-      const body = {
-        platform: parsed.platform || 'json_upload',
-        messages: parsed.messages,
-      }
       const res = await api.ingestJson(body)
-      setResult({ type: 'json', ...res })
+      setResult({ type: body.platform === 'text_upload' ? 'text' : 'json', ...res })
     } catch (err) {
-      setError(err.message || 'Failed to submit chat log')
+      setError(err.message || 'Failed to submit log')
     } finally {
       setLoading(false)
     }
@@ -172,28 +189,32 @@ const Upload = () => {
   // ─── Render: Success state ───────────────────────────
   if (result) {
     return (
-      <div className="max-w-2xl mx-auto">
-        <div className="glass-card rounded-2xl p-8 text-center">
+      <div className="w-full max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="glass-card rounded-3xl p-10 text-center relative overflow-hidden w-full min-w-0">
+          {/* Decorative background glow */}
+          <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-60 h-60 bg-green-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+
           {/* Success icon */}
-          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-green-100 flex items-center justify-center">
-            <span className="material-symbols-outlined text-green-600 text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+          <div className="w-24 h-24 mx-auto mb-8 rounded-full bg-green-500/10 border-2 border-green-500/20 flex items-center justify-center relative z-10">
+            <span className="material-symbols-outlined text-green-500 text-5xl" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
           </div>
 
-          <h2 className="font-display-sm text-display-sm text-foreground mb-2">Analysis Submitted</h2>
-          <p className="font-body-lg text-body-lg text-muted-foreground mb-6">
-            Your {result.type === 'audio' ? 'audio recording' : 'chat log'} has been submitted for analysis.
+          <h2 className="font-display-sm text-2xl md:text-3xl text-foreground mb-3 relative z-10">Analysis Submitted</h2>
+          <p className="text-base text-muted-foreground mb-8 leading-relaxed relative z-10" style={{ maxWidth: '28rem', margin: '0 auto 2rem auto', textAlign: 'center', width: '100%' }}>
+            Your {result.type === 'audio' ? 'audio recording' : 'chat log'} has been submitted for grooming pattern analysis.
           </p>
 
           {/* Session info */}
-          <div className="bg-muted/50 rounded-xl p-5 mb-6 text-left space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="font-label-md text-label-md text-muted-foreground">Session ID</span>
-              <span className="font-body-md text-body-md text-foreground font-mono text-sm">{result.session_id}</span>
+          <div className="bg-muted/30 dark:bg-zinc-800/40 rounded-2xl p-6 mb-8 text-left space-y-4 border border-border/30 relative z-10">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <span className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Session ID</span>
+              <span className="text-sm text-foreground font-mono bg-muted/50 dark:bg-zinc-700/40 px-3 py-1.5 rounded-lg break-all select-all">{result.session_id}</span>
             </div>
+            <div className="h-px bg-border/30"></div>
             <div className="flex items-center justify-between">
-              <span className="font-label-md text-label-md text-muted-foreground">Status</span>
-              <span className="px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 font-label-sm text-label-sm flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+              <span className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Status</span>
+              <span className="px-3 py-1.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-bold uppercase tracking-wider flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
                 {result.status || 'processing'}
               </span>
             </div>
@@ -201,26 +222,42 @@ const Upload = () => {
 
           {/* Transcript preview for audio */}
           {result.transcript && (
-            <div className="bg-muted/50 rounded-xl p-5 mb-6 text-left">
-              <div className="font-label-md text-label-md text-muted-foreground mb-2">Transcript</div>
-              <p className="font-body-md text-body-md text-foreground italic leading-relaxed max-h-[200px] overflow-y-auto">
+            <div className="bg-muted/30 dark:bg-zinc-800/40 rounded-2xl p-6 mb-8 text-left border border-border/30 relative z-10">
+              <div className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                <span className="material-symbols-outlined text-[18px] text-primary">mic</span>
+                Transcript
+              </div>
+              <p className="text-sm text-foreground italic leading-relaxed max-h-[200px] overflow-y-auto pr-2">
                 "{result.transcript}"
               </p>
             </div>
           )}
 
+          {/* Preview for JSON/Text */}
+          {(result.type === 'json' || result.type === 'text') && jsonText && (
+            <div className="bg-muted/30 dark:bg-zinc-800/40 rounded-2xl p-6 mb-8 text-left border border-border/30 relative z-10">
+              <div className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                <span className="material-symbols-outlined text-[18px] text-primary">description</span>
+                Submitted Content
+              </div>
+              <pre className="text-xs text-foreground leading-relaxed max-h-[200px] overflow-y-auto pr-2 font-mono whitespace-pre-wrap opacity-80">
+                {jsonText.length > 500 ? jsonText.substring(0, 500) + '...' : jsonText}
+              </pre>
+            </div>
+          )}
+
           {/* Actions */}
-          <div className="flex gap-3 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center relative z-10">
             <button
               onClick={handleViewResults}
-              className="px-6 py-3 bg-primary text-primary-foreground rounded-xl font-label-lg text-label-lg hover:bg-primary/90 transition-all duration-200 shadow-md hover:shadow-lg flex items-center gap-2"
+              className="px-8 py-3.5 bg-primary text-primary-foreground rounded-2xl font-bold text-sm hover:bg-primary/90 transition-all duration-300 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02] flex items-center justify-center gap-2"
             >
               <span className="material-symbols-outlined text-[18px]">visibility</span>
               View Results
             </button>
             <button
               onClick={handleReset}
-              className="px-6 py-3 bg-secondary hover:bg-secondary/80 text-foreground rounded-xl font-label-lg text-label-lg transition-all duration-200 border border-border/50 flex items-center gap-2"
+              className="px-8 py-3.5 bg-white dark:bg-zinc-800 hover:bg-muted text-foreground rounded-2xl font-bold text-sm transition-all duration-300 border border-border/50 hover:border-border flex items-center justify-center gap-2"
             >
               <span className="material-symbols-outlined text-[18px]">add</span>
               New Upload
@@ -257,7 +294,7 @@ const Upload = () => {
             }`}
           >
             <span className="material-symbols-outlined text-[20px]">chat</span>
-            Chat Log (JSON)
+            Chat Log (JSON/Text)
           </button>
           <button
             onClick={() => { setActiveTab('audio'); setError(null) }}
@@ -286,7 +323,7 @@ const Upload = () => {
                 <input
                   ref={fileInputRef}
                   type="file"
-                  accept=".json"
+                  accept=".json,.txt"
                   onChange={handleJsonFile}
                   className="hidden"
                 />
@@ -301,8 +338,8 @@ const Upload = () => {
                   </div>
                 ) : (
                   <div>
-                    <div className="font-label-md text-muted-foreground">Drop a .json file here or click to browse</div>
-                    <div className="font-label-sm text-muted-foreground/70 mt-1">Supports .json files</div>
+                    <div className="font-label-md text-muted-foreground">Drop a .json or .txt file here or click to browse</div>
+                    <div className="font-label-sm text-muted-foreground/70 mt-1">Supports .json or .txt files</div>
                   </div>
                 )}
               </div>
@@ -310,7 +347,7 @@ const Upload = () => {
               {/* Or divider */}
               <div className="flex items-center gap-4">
                 <div className="flex-1 h-px bg-border/50"></div>
-                <span className="font-label-sm text-label-sm text-muted-foreground">or paste JSON directly</span>
+                <span className="font-label-sm text-label-sm text-muted-foreground">or paste JSON/text directly</span>
                 <div className="flex-1 h-px bg-border/50"></div>
               </div>
 
@@ -319,7 +356,7 @@ const Upload = () => {
                 <textarea
                   value={jsonText}
                   onChange={(e) => { setJsonText(e.target.value); setError(null) }}
-                  placeholder={SAMPLE_JSON}
+                  placeholder="Paste your JSON or text here..."
                   rows={12}
                   className="w-full bg-muted/50 border border-border/50 rounded-xl p-4 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/10 transition-all resize-y"
                 />

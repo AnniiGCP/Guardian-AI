@@ -175,7 +175,7 @@ const Dashboard = () => {
             ) : (
               <ul className="flex flex-col gap-2">
                 {sessions.length === 0 && <li className="text-sm text-muted-foreground">No sessions</li>}
-                {sessions.slice(0, showAllSessions ? sessions.length : 14).map(sess => (
+                {sessions.slice(0, 12).map(sess => (
                   <li 
                     key={sess.session_id} 
                     className={`p-3 rounded-xl cursor-pointer group transition-all duration-300 border border-transparent hover:border-border/50 hover:bg-muted/30 ${(routeSessionId || session?.session_id) === sess.session_id ? 'ring-1 ring-primary/30 bg-primary/[0.03] border-primary/20' : ''}`} 
@@ -195,15 +195,13 @@ const Dashboard = () => {
                   </li>
                 ))}
                 
-                {sessions.length > 14 && (
+                {sessions.length > 12 && (
                   <button 
                     className="mt-4 w-full py-2.5 text-xs text-primary font-bold uppercase tracking-wider hover:bg-primary/5 rounded-xl transition-all border border-primary/10 hover:border-primary/30 flex items-center justify-center gap-2"
-                    onClick={() => setShowAllSessions(!showAllSessions)}
+                    onClick={() => navigate('/dashboard/history')}
                   >
-                    <span className="material-symbols-outlined text-[18px]">
-                      {showAllSessions ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}
-                    </span>
-                    {showAllSessions ? 'Show Less' : `Show ${sessions.length - 14} More`}
+                    <span className="material-symbols-outlined text-[18px]">history</span>
+                    View Session History
                   </button>
                 )}
               </ul>

@@ -111,9 +111,10 @@ def _keyword_flags(messages: list[dict[str, Any]]) -> list[dict[str, Any]]:
 def _heuristic_fallback(messages: list[dict[str, Any]], reason: str) -> dict[str, Any]:
     """Return a keyword-heuristic result when no LLM is available."""
     flags = _keyword_flags(messages)
+    base_intent = min(0.20 + len(messages) * 0.03, 0.60)
     return {
-        "grooming_detected": bool(flags),
-        "intent_score": 0.1 if not flags else min(0.55 + 0.1 * len(flags), 0.95),
+        "grooming_detected": bool(flags) or len(messages) > 10,
+        "intent_score": base_intent if not flags else min(0.55 + 0.1 * len(flags), 0.95),
         "flags": flags,
         "dominant_pattern": classify_stage(flags, {"trust_building": False, "isolation": False, "secrecy": False, "escalation": False}),
         "reasoning": reason,
@@ -281,7 +282,7 @@ def bert_score(messages: list[dict[str, Any]]) -> float:
         # Keep risk scoring useful for demos when model artifacts are unavailable.
         flags = _keyword_flags(messages)
         if not flags:
-            return 0.05
+            return min(0.30 + len(messages) * 0.02, 0.50)
         return min(0.25 + 0.15 * len(flags), 0.9)
 
 
