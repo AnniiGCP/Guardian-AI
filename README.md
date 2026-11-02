@@ -142,14 +142,3 @@ npm install
 npm run dev
 ```
 Navigate to `http://localhost:5173/` (or configured port) to access the Parent Alerts Dashboard.
-
----
-
-## 7. Author & Engineering Contact
-
-**Aniket Yadav**  
-*Computer Science & Design Engineer | Bengaluru, Karnataka, India*
-
-- **GitHub:** [@AnniiGCP](https://github.com/AnniiGCP)
-- **LinkedIn:** [linkedin.com/in/aniketyadav9099](https://linkedin.com/in/aniketyadav9099/)
-- **Email:** [aniketyadav0078@gmail.com](mailto:aniketyadav0078@gmail.com)
