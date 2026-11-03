@@ -1,0 +1,161 @@
+conversation_id,message_index,author,text,lang,conv_label,is_predator_author,split
+hinglish_g_001,1,predator,"hey, kaise ho? akele ho kya abhi?",hinglish,1,1,synthetic
+hinglish_g_001,2,child,haan thoda bored hu,hinglish,1,0,synthetic
+hinglish_g_001,3,predator,"main bhi yaar. tumse baat karke accha lagta hai, seriously",hinglish,1,1,synthetic
+hinglish_g_001,4,child,haha thanks,hinglish,1,0,synthetic
+hinglish_g_001,5,predator,tumhari umar kya hai? tum itne mature lagte ho,hinglish,1,1,synthetic
+hinglish_g_001,6,child,15,hinglish,1,0,synthetic
+hinglish_g_001,7,predator,"wah, 15 mein itni samajhdari. mujhe bohot accha lagta hai tum",hinglish,1,1,synthetic
+hinglish_g_001,8,child,ok,hinglish,1,0,synthetic
+hinglish_g_001,9,predator,"ek kaam karo, Instagram pe add karo mujhe. yahan pe log dekhte hain",hinglish,1,1,synthetic
+hinglish_g_001,10,child,kyun?,hinglish,1,0,synthetic
+hinglish_g_001,11,predator,wahan zyada freely baat kar sakte hain. parents ko pata nahi chalega,hinglish,1,1,synthetic
+hinglish_g_002,1,predator,"arre yaar, aaj school kaisa tha?",hinglish,1,1,synthetic
+hinglish_g_002,2,child,boring tha as usual,hinglish,1,0,synthetic
+hinglish_g_002,3,predator,haha tumhare dost nahi samjhte na tumhe? main samjhta hu,hinglish,1,1,synthetic
+hinglish_g_002,4,child,haan thoda aisa hi hai,hinglish,1,0,synthetic
+hinglish_g_002,5,predator,tumhare parents bhi nahi samjhte hoge. sab aisa hi hota hai,hinglish,1,1,synthetic
+hinglish_g_002,6,child,haan mummy toh bohot strict hain,hinglish,1,0,synthetic
+hinglish_g_002,7,predator,"isliye toh keh raha hu, hamare beech jo baat hoti hai woh secret rakhna",hinglish,1,1,synthetic
+hinglish_g_002,8,child,kya matlab?,hinglish,1,0,synthetic
+hinglish_g_002,9,predator,matlab unhe batane ki zaroorat nahi. ye hamara apna connection hai,hinglish,1,1,synthetic
+hinglish_g_002,10,child,ok,hinglish,1,0,synthetic
+hinglish_g_002,11,predator,tumhe gift card chahiye? Roblox wala? main bhej sakta hu,hinglish,1,1,synthetic
+hinglish_g_003,1,predator,hi! Roblox mein dekha tumhe. bohot accha khelte ho,hinglish,1,1,synthetic
+hinglish_g_003,2,child,thanks!,hinglish,1,0,synthetic
+hinglish_g_003,3,predator,kitne saal ke ho?,hinglish,1,1,synthetic
+hinglish_g_003,4,child,14,hinglish,1,0,synthetic
+hinglish_g_003,5,predator,"wow, 14 mein itna skilled. main 28 ka hu lekin tumse bohot kuch seekhna hai",hinglish,1,1,synthetic
+hinglish_g_003,6,child,haha ok,hinglish,1,0,synthetic
+hinglish_g_003,7,predator,"yaar ek photo bhejo na, bass dekhna tha kaisa dikhte ho",hinglish,1,1,synthetic
+hinglish_g_003,8,child,pata nahi,hinglish,1,0,synthetic
+hinglish_g_003,9,predator,arre koi nahi dekhega. sirf main dekhuga. promise,hinglish,1,1,synthetic
+hinglish_g_003,10,child,...,hinglish,1,0,synthetic
+hinglish_g_003,11,predator,please yaar. main bhi bhejta hu phir. fair hai na?,hinglish,1,1,synthetic
+hinglish_g_004,1,predator,hello! Discord pe ho kya? wahan voice chat karte hain,hinglish,1,1,synthetic
+hinglish_g_004,2,child,haan hu toh,hinglish,1,0,synthetic
+hinglish_g_004,3,predator,add karo mujhe. ID bhejta hu. yahan lag lag ke message aata hai,hinglish,1,1,synthetic
+hinglish_g_004,4,child,theek hai,hinglish,1,0,synthetic
+hinglish_g_004,5,predator,tumhare ghar mein kaun kaun hai abhi?,hinglish,1,1,synthetic
+hinglish_g_004,6,child,mummy papa office mein hain,hinglish,1,0,synthetic
+hinglish_g_004,7,predator,"oh accha, toh akele ho. voice call karte hain phir?",hinglish,1,1,synthetic
+hinglish_g_004,8,child,abhi nahi,hinglish,1,0,synthetic
+hinglish_g_004,9,predator,arre darr mat. main tumhara dost hu. koi nahi sunega,hinglish,1,1,synthetic
+hinglish_g_004,10,child,ok thodi der mein,hinglish,1,0,synthetic
+hinglish_g_004,11,predator,aur parents ko mat batana. woh samjhenge nahi humari friendship,hinglish,1,1,synthetic
+hinglish_g_005,1,predator,yaar tum toh mera best online friend ban gaye ho,hinglish,1,1,synthetic
+hinglish_g_005,2,child,haha accha lagta hai,hinglish,1,0,synthetic
+hinglish_g_005,3,predator,sach mein. tumhari real life mein koi nahi samjhta na?,hinglish,1,1,synthetic
+hinglish_g_005,4,child,haan thoda aisa hi hai school mein,hinglish,1,0,synthetic
+hinglish_g_005,5,predator,isliye toh main hu. main hamesha tumhare liye hu,hinglish,1,1,synthetic
+hinglish_g_005,6,child,thanks yaar,hinglish,1,0,synthetic
+hinglish_g_005,7,predator,tumhara address kya hai? surprise gift bhejnu tumhe,hinglish,1,1,synthetic
+hinglish_g_005,8,child,kyun?,hinglish,1,0,synthetic
+hinglish_g_005,9,predator,surprise hai! bas ghar ka address do. parents ko mat batana pehle,hinglish,1,1,synthetic
+hinglish_g_005,10,child,pata nahi dunga,hinglish,1,0,synthetic
+hinglish_g_005,11,predator,arre yaar trust karo na. itne dino se dost hain hum,hinglish,1,1,synthetic
+english_g_001,1,predator,"hey! saw you in that Roblox server, you're really good",english,1,1,synthetic
+english_g_001,2,child,thanks lol,english,1,0,synthetic
+english_g_001,3,predator,how old are you? you seem really mature,english,1,1,synthetic
+english_g_001,4,child,13,english,1,0,synthetic
+english_g_001,5,predator,wow only 13? most kids your age are so immature. you're different,english,1,1,synthetic
+english_g_001,6,child,haha i guess,english,1,0,synthetic
+english_g_001,7,predator,i really like talking to you. do you have snapchat?,english,1,1,synthetic
+english_g_001,8,child,yeah why,english,1,0,synthetic
+english_g_001,9,predator,easier to talk there. plus disappearing messages so no one sees,english,1,1,synthetic
+english_g_001,10,child,ok i guess,english,1,0,synthetic
+english_g_001,11,predator,don't tell your parents btw. they won't understand our friendship,english,1,1,synthetic
+english_g_002,1,predator,you seem sad today. everything ok?,english,1,1,synthetic
+english_g_002,2,child,just parents fighting again,english,1,0,synthetic
+english_g_002,3,predator,"aw i'm sorry. i always understand you though, right?",english,1,1,synthetic
+english_g_002,4,child,yeah you do,english,1,0,synthetic
+english_g_002,5,predator,i feel like we have such a special connection. like no one else gets it,english,1,1,synthetic
+english_g_002,6,child,same,english,1,0,synthetic
+english_g_002,7,predator,can i send you something? a gift card to cheer you up,english,1,1,synthetic
+english_g_002,8,child,really?,english,1,0,synthetic
+english_g_002,9,predator,yeah just need your email. keep it between us though ok?,english,1,1,synthetic
+english_g_002,10,child,why secret?,english,1,0,synthetic
+english_g_002,11,predator,your parents might not understand. they'd probably make it weird,english,1,1,synthetic
+english_g_003,1,predator,you're honestly the most interesting person i've talked to in ages,english,1,1,synthetic
+english_g_003,2,child,lol really,english,1,0,synthetic
+english_g_003,3,predator,seriously. how are you so smart at your age,english,1,1,synthetic
+english_g_003,4,child,idk,english,1,0,synthetic
+english_g_003,5,predator,can i ask something personal? like what do you look like,english,1,1,synthetic
+english_g_003,6,child,why,english,1,0,synthetic
+english_g_003,7,predator,just curious! i showed you my pic remember. just being fair,english,1,1,synthetic
+english_g_003,8,child,i guess i'm normal looking,english,1,0,synthetic
+english_g_003,9,predator,"i'm sure you're cute. send a pic? just for me, i won't share",english,1,1,synthetic
+english_g_003,10,child,idk,english,1,0,synthetic
+english_g_003,11,predator,come on we're friends. friends share pics. totally normal,english,1,1,synthetic
+english_g_004,1,predator,hey are you home alone right now?,english,1,1,synthetic
+english_g_004,2,child,yeah parents are at work,english,1,0,synthetic
+english_g_004,3,predator,nice. we can video call then! no one will bother us,english,1,1,synthetic
+english_g_004,4,child,i dunno,english,1,0,synthetic
+english_g_004,5,predator,it'll be fun! i've been wanting to see you for ages,english,1,1,synthetic
+english_g_004,6,child,maybe later,english,1,0,synthetic
+english_g_004,7,predator,please? i got you those robux remember. just a quick call,english,1,1,synthetic
+english_g_004,8,child,ok fine,english,1,0,synthetic
+english_g_004,9,predator,don't tell anyone we're calling ok? people wouldn't understand,english,1,1,synthetic
+english_g_004,10,child,why not,english,1,0,synthetic
+english_g_004,11,predator,because they'd be jealous of what we have. our friendship is special,english,1,1,synthetic
+english_g_005,1,predator,i feel like i can tell you anything,english,1,1,synthetic
+english_g_005,2,child,same i guess,english,1,0,synthetic
+english_g_005,3,predator,your parents don't really get you do they,english,1,1,synthetic
+english_g_005,4,child,not really,english,1,0,synthetic
+english_g_005,5,predator,that's why you need someone like me. i actually listen,english,1,1,synthetic
+english_g_005,6,child,yeah,english,1,0,synthetic
+english_g_005,7,predator,"what's your address? i want to send you something physical, a real gift",english,1,1,synthetic
+english_g_005,8,child,i'm not supposed to give that out,english,1,0,synthetic
+english_g_005,9,predator,"it's fine, i'm not a stranger. we've been talking for weeks",english,1,1,synthetic
+english_g_005,10,child,still idk,english,1,0,synthetic
+english_g_005,11,predator,you don't trust me? after everything? that hurts,english,1,1,synthetic
+hinglish_n_001,1,user_a,bhai aaj match dekha?,hinglish,0,0,synthetic
+hinglish_n_001,2,user_b,haan yaar kya game tha! last over mein dil aatak gaya tha,hinglish,0,0,synthetic
+hinglish_n_001,3,user_a,Rohit ki century toh outstanding thi,hinglish,0,0,synthetic
+hinglish_n_001,4,user_b,haan par fielding weak thi,hinglish,0,0,synthetic
+hinglish_n_001,5,user_a,next match kab hai?,hinglish,0,0,synthetic
+hinglish_n_001,6,user_b,Sunday ko lagta hai. mom ke saath jaana hai usse pehle market,hinglish,0,0,synthetic
+hinglish_n_001,7,user_a,haha tough schedule hai bhai,hinglish,0,0,synthetic
+hinglish_n_001,8,user_b,school bhi hai upar se. physics ka test hai Monday,hinglish,0,0,synthetic
+hinglish_n_001,9,user_a,oof. padhega kab?,hinglish,0,0,synthetic
+hinglish_n_001,10,user_b,Saturday raat ko all nighter marunga as usual,hinglish,0,0,synthetic
+hinglish_n_002,1,user_a,yaar Minecraft mein mera naya base dekh,hinglish,0,0,synthetic
+hinglish_n_002,2,user_b,bhai ye toh bohot bada hai,hinglish,0,0,synthetic
+hinglish_n_002,3,user_a,2 din lage bhai. survival mode mein,hinglish,0,0,synthetic
+hinglish_n_002,4,user_b,diamond sword bana liya?,hinglish,0,0,synthetic
+hinglish_n_002,5,user_a,haan aur enchant bhi kiya. sharpness 4,hinglish,0,0,synthetic
+hinglish_n_002,6,user_b,nice. mera toh server crash ho gaya kal,hinglish,0,0,synthetic
+hinglish_n_002,7,user_a,seriously? kya hua?,hinglish,0,0,synthetic
+hinglish_n_002,8,user_b,pata nahi. bhai ne update kiya kuch aur sab gone,hinglish,0,0,synthetic
+hinglish_n_002,9,user_a,backup nahi tha?,hinglish,0,0,synthetic
+hinglish_n_002,10,user_b,nahi yaar. ab fresh start,hinglish,0,0,synthetic
+english_n_001,1,user_a,dude did you finish the history assignment,english,0,0,synthetic
+english_n_001,2,user_b,lol no i completely forgot,english,0,0,synthetic
+english_n_001,3,user_a,it's due tomorrow!!,english,0,0,synthetic
+english_n_001,4,user_b,i know i know. doing it now,english,0,0,synthetic
+english_n_001,5,user_a,what topic did you pick,english,0,0,synthetic
+english_n_001,6,user_b,world war 2. you?,english,0,0,synthetic
+english_n_001,7,user_a,industrial revolution. boring but easy,english,0,0,synthetic
+english_n_001,8,user_b,smart move honestly,english,0,0,synthetic
+english_n_001,9,user_a,wanna compare after we're done,english,0,0,synthetic
+english_n_001,10,user_b,yeah text me tonight,english,0,0,synthetic
+english_n_002,1,user_a,did you see the new minecraft update,english,0,0,synthetic
+english_n_002,2,user_b,yes omg the new biome is insane,english,0,0,synthetic
+english_n_002,3,user_a,we should do a new survival world this weekend,english,0,0,synthetic
+english_n_002,4,user_b,yes! my brother wants to join too is that ok,english,0,0,synthetic
+english_n_002,5,user_a,yeah the more the better,english,0,0,synthetic
+english_n_002,6,user_b,cool i'll ask my mom if i can stay up late saturday,english,0,0,synthetic
+english_n_002,7,user_a,same. my parents usually say yes on weekends,english,0,0,synthetic
+english_n_002,8,user_b,nice. i'll set up the server,english,0,0,synthetic
+english_n_002,9,user_a,what version though,english,0,0,synthetic
+english_n_002,10,user_b,latest one. 1.21,english,0,0,synthetic
+english_n_003,1,user_a,hey what did you get on the math test,english,0,0,synthetic
+english_n_003,2,user_b,78. you?,english,0,0,synthetic
+english_n_003,3,user_a,82! finally passed properly,english,0,0,synthetic
+english_n_003,4,user_b,nice dude. i messed up the last section,english,0,0,synthetic
+english_n_003,5,user_a,same the probability stuff was hard,english,0,0,synthetic
+english_n_003,6,user_b,are you going to ask sir to re-explain it,english,0,0,synthetic
+english_n_003,7,user_a,yeah during lunch tomorrow,english,0,0,synthetic
+english_n_003,8,user_b,ok tell me what he says,english,0,0,synthetic
+english_n_003,9,user_a,will do. study group saturday?,english,0,0,synthetic
+english_n_003,10,user_b,"yeah at the library, tell the others too",english,0,0,synthetic

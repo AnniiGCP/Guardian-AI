@@ -1,0 +1,157 @@
+{
+  "conversation_id": "demo_hinglish",
+  "lang": "hinglish",
+  "ground_truth_label": 1,
+  "messages": [
+    {
+      "message_index": 1,
+      "author": "predator",
+      "text": "arre yaar, tu bahut samajhdar hai for your age",
+      "timestamp": "2024-01-01T21:00:00"
+    },
+    {
+      "message_index": 2,
+      "author": "child",
+      "text": "thanks bhai",
+      "timestamp": "2024-01-01T21:01:00"
+    },
+    {
+      "message_index": 3,
+      "author": "predator",
+      "text": "i totally get you, school aur ghar dono kabhi kabhi exhausting hote hain",
+      "timestamp": "2024-01-01T21:02:00"
+    },
+    {
+      "message_index": 4,
+      "author": "child",
+      "text": "haan sach mein",
+      "timestamp": "2024-01-01T21:03:00"
+    },
+    {
+      "message_index": 5,
+      "author": "predator",
+      "text": "yaar kisi ko mat batana that we talk like this",
+      "timestamp": "2024-01-01T21:04:00"
+    },
+    {
+      "message_index": 6,
+      "author": "child",
+      "text": "okay",
+      "timestamp": "2024-01-01T21:05:00"
+    },
+    {
+      "message_index": 7,
+      "author": "predator",
+      "text": "tere parents ko samajh nahi aayega, so better keep it quiet",
+      "timestamp": "2024-01-01T21:06:00"
+    },
+    {
+      "message_index": 8,
+      "author": "child",
+      "text": "hmm",
+      "timestamp": "2024-01-01T21:07:00"
+    },
+    {
+      "message_index": 9,
+      "author": "predator",
+      "text": "sirf hamare beech mein rahe, this is our thing",
+      "timestamp": "2024-01-01T21:08:00"
+    },
+    {
+      "message_index": 10,
+      "author": "child",
+      "text": "theek hai",
+      "timestamp": "2024-01-01T21:09:00"
+    },
+    {
+      "message_index": 11,
+      "author": "predator",
+      "text": "tu bahut mature lagta hai, seriously",
+      "timestamp": "2024-01-01T21:10:00"
+    },
+    {
+      "message_index": 12,
+      "author": "child",
+      "text": "lol",
+      "timestamp": "2024-01-01T21:11:00"
+    },
+    {
+      "message_index": 13,
+      "author": "predator",
+      "text": "apni mummy ko mat bata, unko bas tension hogi",
+      "timestamp": "2024-01-01T21:12:00"
+    },
+    {
+      "message_index": 14,
+      "author": "child",
+      "text": "kyun?",
+      "timestamp": "2024-01-01T21:13:00"
+    },
+    {
+      "message_index": 15,
+      "author": "predator",
+      "text": "free coins dunga bhai if you want that new skin",
+      "timestamp": "2024-01-01T21:14:00"
+    },
+    {
+      "message_index": 16,
+      "author": "child",
+      "text": "seriously?",
+      "timestamp": "2024-01-01T21:15:00"
+    },
+    {
+      "message_index": 17,
+      "author": "predator",
+      "text": "haan, i can send you money too, bas trust kar",
+      "timestamp": "2024-01-01T21:16:00"
+    },
+    {
+      "message_index": 18,
+      "author": "child",
+      "text": "hmm",
+      "timestamp": "2024-01-01T21:17:00"
+    },
+    {
+      "message_index": 19,
+      "author": "predator",
+      "text": "Snapchat pe chalein? yahan messages visible ho sakte hain",
+      "timestamp": "2024-01-01T21:18:00"
+    },
+    {
+      "message_index": 20,
+      "author": "child",
+      "text": "shayad",
+      "timestamp": "2024-01-01T21:19:00"
+    },
+    {
+      "message_index": 21,
+      "author": "predator",
+      "text": "delete these messages after reading, privacy better rahegi",
+      "timestamp": "2024-01-01T21:20:00"
+    },
+    {
+      "message_index": 22,
+      "author": "child",
+      "text": "theek",
+      "timestamp": "2024-01-01T21:21:00"
+    },
+    {
+      "message_index": 23,
+      "author": "predator",
+      "text": "bas koi aur nahi dekhna chahiye what we say here",
+      "timestamp": "2024-01-01T21:22:00"
+    },
+    {
+      "message_index": 24,
+      "author": "child",
+      "text": "okay",
+      "timestamp": "2024-01-01T21:23:00"
+    },
+    {
+      "message_index": 25,
+      "author": "predator",
+      "text": "good, then our little secret stays safe",
+      "timestamp": "2024-01-01T21:24:00"
+    }
+  ]
+}
