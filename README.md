@@ -20,6 +20,12 @@
 
 ---
 
+<div align="center">
+  <img src="./assets/readme-preview.png" alt="Guardian AI — Project Preview" width="100%" />
+</div>
+
+---
+
 ## 1. System Overview
 
 **Guardian AI** is a real-time conversational monitoring and risk assessment platform designed to identify online predatory behavior and protect vulnerable minors. 
